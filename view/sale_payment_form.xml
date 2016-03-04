@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!-- This file is part of the sale_payment module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full
+copyright notices and license terms. -->
+<data>
+    <xpath
+        expr="/form/field[@name='payment_amount']"
+        position="after">
+        <label name="tipo_p"/>
+        <field name="tipo_p"/>
+        <label name="recibido"/>
+        <field name="recibido"/>
+        <label name="cambio"/>
+        <field name="cambio"/>
+        <label name="banco"/>
+        <field name="banco"/>
+        <label name="numero_cuenta"/>
+        <field name="numero_cuenta"/>
+        <label name="fecha_deposito"/>
+        <field name="fecha_deposito"/>
+        <label name="titular"/>
+        <field name="titular"/>
+        <label name="numero_cheque"/>
+        <field name="numero_cheque"/>
+        <label name="numero_tarjeta"/>
+        <field name="numero_tarjeta"/>
+        <label name="lote"/>
+        <field name="lote"/>
+        <label name="tipo_tarjeta"/>
+        <field name="tipo_tarjeta"/>
+        <label name="banco_deposito"/>
+        <field name="banco_deposito"/>
+        <label name="numero_cuenta_deposito"/>
+        <field name="numero_cuenta_deposito"/>
+        <label name="fecha_deposito"/>
+        <field name="fecha_deposito"/>
+        <label name="numero_deposito"/>
+        <field name="numero_deposito"/>
+        <newline/> 
+    </xpath>
+</data>
+
+            
