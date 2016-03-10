@@ -1,6 +1,7 @@
 # This file is part of the sale_payment module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
+#! -*- coding: utf8 -*-
 from decimal import Decimal
 from trytond.model import ModelView, fields, ModelSQL
 from trytond.pool import PoolMeta, Pool
@@ -8,8 +9,10 @@ from trytond.pyson import Bool, Eval, Not
 from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateTransition, Button
 from trytond import backend
+from datetime import datetime,timedelta
+from dateutil.relativedelta import relativedelta
 
-__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale']
+__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale', 'AddTermForm', 'WizardAddTerm', 'Payment_Term']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 
@@ -28,7 +31,7 @@ class Sale():
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
-    fecha_deposito = fields.Date('Fecha de Deposito', states={
+    fecha_deposito = fields.Date('Fecha deposito', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
@@ -75,6 +78,20 @@ class Sale():
                 'invisible': Eval('tipo_p') != 'deposito',
                 })
                 
+    @classmethod
+    def __setup__(cls):
+        super(Sale, cls).__setup__()
+        cls._buttons.update({
+                'wizard_add_term': {
+                    'invisible': Eval('state') != 'draft'
+                    }
+                })
+                
+    @classmethod
+    @ModelView.button_action('nodux_sale_payment.wizard_add_term')
+    def wizard_add_term(cls, sales):
+        pass
+    
     @classmethod
     @ModelView.button
     def process(cls, sales):
@@ -143,27 +160,29 @@ class Sale():
                     print "Aqui esta haciendo el proceso de tpv", invoice
             if sale.is_done():
                 cls.do([sale])
-
-
-class SalePaymentForm(ModelView, ModelSQL):
+                
+class SalePaymentForm():
     'Sale Payment Form'
     __name__ = 'sale.payment.form'
 
-    recibido = fields.Numeric('Valor recibido del cliente', help = "Ingrese el valor de dinero que reciba del cliente",
+    recibido = fields.Numeric('Valor recibido del cliente', help = "Ingrese el monto de dinero que reciba del cliente",
         digits=(16, Eval('currency_digits', 2)),
-        depends=['currency_digits'])
-     
-    cambio = fields.Function(fields.Numeric('SU CAMBIO'),'on_change_with_recibido')
-    
+        depends=['currency_digits'], states={
+                'readonly': ~Eval('active', True),
+                'invisible': Eval('tipo_p') != 'efectivo',
+                } )
+    cambio_cliente = fields.Function(fields.Numeric('SU CAMBIO',digits=(16, Eval('currency_digits', 2)),
+        depends=['currency_digits'], states={
+                'readonly': ~Eval('active', True),
+                'invisible': Eval('tipo_p') != 'efectivo',
+                }),'on_change_with_recibido')
     """
-    cambio = fields.Function(fields.Numeric('SU CAMBIO'),'on_change_with_recibido')
     tipo_p = fields.Function(fields.Char('Tipo de Pago'),'on_change_with_journal')
-    cambio = fields.Numeric('SU CAMBIO')
     """
     tipo_p = fields.Selection([
             ('',''),
             ('efectivo','Efectivo'),
-            ('tarjeta','Tarjeta de Debito'),
+            ('tarjeta','Tarjeta de Credito'),
             ('deposito','Deposito'),
             ('cheque','Cheque'),
             ],'Forma de Pago')
@@ -176,7 +195,7 @@ class SalePaymentForm(ModelView, ModelSQL):
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
-    fecha_deposito = fields.Date('Fecha de Deposito', states={
+    fecha_deposito_cheque = fields.Date('Fecha de Deposito', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
@@ -231,21 +250,19 @@ class SalePaymentForm(ModelView, ModelSQL):
         super(SalePaymentForm, cls).__setup__()
         cls._order.insert(0, ('sequence', 'ASC'))
      
-    @classmethod
-    def __register__(cls, module_name):
-        TableHandler = backend.get('TableHandler')
-        cursor = Transaction().cursor
-        table = TableHandler(cursor, cls, module_name)
-        super(SalePaymentForm, cls).__register__(module_name)
-        # Migration from 2.4: drop required on sequence
-        table.not_null_action('sequence', action='remove')
-          
-    @fields.depends('recibido', 'payment_amount')
+    @fields.depends('payment_amount', 'recibido')
     def on_change_with_recibido(self, name=None):
         if self.recibido and self.payment_amount:
+            cambio = Decimal(0.0)
+            print "Lo que recibo ***", (self.recibido - self.payment_amount)
             cambio = (self.recibido) - (self.payment_amount)
+            print "El cambio", cambio
             return cambio
-
+            
+    @staticmethod
+    def default_cambio_cliente():
+        return Decimal(0.0)    
+    
 class WizardSalePayment(Wizard):
     'Wizard Sale Payment'
     __name__ = 'sale.payment'  
@@ -260,7 +277,7 @@ class WizardSalePayment(Wizard):
         user = User(Transaction().user)
         sale_device = sale.sale_device or user.sale_device or False
         Date = pool.get('ir.date')
-        #salep.save_values()
+
         if user.id != 0 and not sale_device:
             self.raise_user_error('not_sale_device')
         print "La venta tiene este termino de pago", sale.payment_term
@@ -318,7 +335,6 @@ class WizardSalePayment(Wizard):
         StatementLine = pool.get('account.statement.line')
         
         form = self.start
-        form.on_change_with_recibido()
         statements = Statement.search([
                 ('journal', '=', form.journal),
                 ('state', '=', 'draft'),
@@ -330,7 +346,6 @@ class WizardSalePayment(Wizard):
         sale = Sale(active_id)
         if form.tipo_p == 'cheque':
             sale.tipo_p = form.tipo_p
-            sale.recibido = form.recibido
             sale.banco = form.banco
             sale.numero_cuenta = form.numero_cuenta
             sale.fecha_deposito= form.fecha_deposito
@@ -344,15 +359,16 @@ class WizardSalePayment(Wizard):
             sale.numero_cuenta_deposito = form.numero_cuenta_deposito
             sale.fecha_deposito = form.fecha_deposito
             sale.numero_deposito= form.numero_deposito
-            sale.save()
          
         if form.tipo_p == 'tarjeta':
             sale.tipo_p = form.tipo_p
             sale.numero_tarjeta = form.numero_tarjeta
             sale.lote = form.lote
             sale.tipo_tarjeta = form.tipo_tarjeta
-            sale.save()
         
+        if form.tipo_p == 'efectivo':
+            sale.recibido = form.recibido
+            
         if not sale.reference:
             Sale.set_reference([sale])
 
@@ -382,8 +398,183 @@ class WizardSalePayment(Wizard):
         if sale.state != 'draft':
             return 'end'
         
-        
         return 'end'
 
-       
+class AddTermForm(ModelView):
+    'Add Term Form'
+    __name__ = 'nodux_sale_payment.add_term_form'
+    
+    verifica_dias = fields.Boolean("Credito por dias", help=u"Seleccione si desea realizar su pago en los dias siguientes", states={
+            'invisible': Eval('verifica_pagos', True),
+            })
+    verifica_pagos = fields.Boolean("Credito por pagos", help=u"Seleccione si desea realizar sus pagos mensuales", states={
+            'invisible': Eval('verifica_dias', True),
+            })
+    dias = fields.Numeric("Numero de dias", help=u"Ingrese el numero de dias en los que se realizara el pago", states={
+            'invisible': ~Eval('verifica_dias', False),
+            })
+    pagos = fields.Numeric("Numero de pagos", help=u"Ingrese el numero de pagos en lo que realizara el pago total", states={
+            'invisible': ~Eval('verifica_pagos', False),
+            })
+    creditos = fields.One2Many('sale_payment.payment', 'sale',
+        'Formas de Pago')
+    efectivo = fields.Numeric('Efectivo')
+    cheque = fields.Numeric('Cheque')
+    nro= fields.Char('Numero de cheque', size=20)
+    banco = fields.Many2One('bank', 'Banco')
+    valor = fields.Numeric('Total a pagar')
+    
+    verifica_dias = fields.Boolean("Credito por dias", help = u"Selecciona si desea realizar su pago en los dias siguientes")
+    @fields.depends('dias', 'creditos', 'efectivo', 'cheque', 'verifica_dias', 'valor')
+    def on_change_dias(self):
+        if self.dias:
+            print "El valor es ", self.valor
+            pool = Pool()
+            Date = pool.get('ir.date')
+            Sale = pool.get('sale.sale')
+            
+            """
+            active_id = Transaction().context.get('active_id', False)
+            sale = Sale(active_id)
+            print "El active_id", active_id
+            """
+            res = {}
+            res['creditos'] = {}
+            if self.creditos:
+                res['creditos']['remove'] = [x['id'] for x in self.creditos]
+                
+            if self.efectivo:
+                monto_efectivo = self.efectivo
+            else:
+                monto_efectivo = Decimal(0.0)
+            if self.cheque:
+                monto_cheque = self.cheque
+            else:
+                monto_cheque = Decimal(0.0)
+            monto_parcial = self.valor -(monto_efectivo + monto_cheque)
+            
+            dias = timedelta(days=int(self.dias))
+            monto = monto_parcial
+            fecha = datetime.now() + dias
+            result = {
+                'fecha': fecha,
+                'monto': monto,
+            }
+            
+            res['creditos'].setdefault('add', []).append((0, result))
+            print res
+            return res          
+    
+    @fields.depends('pagos', 'creditos', 'efectivo', 'cheque', 'verifica_pagos', 'valor')
+    def on_change_pagos(self):
+        if self.pagos:
+            pool = Pool()
+            Date = pool.get('ir.date')
+            Sale = pool.get('sale.sale')
+            """
+            active_id = Transaction().context.get('active_id', False)
+            sale = Sale(active_id)
+            print "El active_id", active_id
+            """
+            
+            if self.efectivo:
+                monto_efectivo = self.efectivo
+            else:
+                monto_efectivo = Decimal(0.0)
+            if self.cheque:
+                monto_cheque = self.cheque
+            else:
+                monto_cheque = Decimal(0.0)
+            #monto_parcial = monto_efectivo + monto_cheque
+            monto_parcial = self.valor -(monto_efectivo + monto_cheque)
+            monto = monto_parcial / self.pagos
+            pagos = int(self.pagos)
+            
+            res = {}
+            res['creditos'] = {}
+            if self.creditos:
+                res['creditos']['remove'] = [x['id'] for x in self.creditos]
+            
+            for p in range(pagos):
+                monto = monto
+                fecha = datetime.now() + relativedelta(months=(p+1))
+                result = {
+                    'fecha': fecha,
+                    'monto': monto,
+                }
+                res['creditos'].setdefault('add', []).append((0, result))
+            print res
+            return res                        
+    #controlar dias y pagos con campo Boolean
+                 
+class WizardAddTerm(Wizard):
+    'Wizard Add Term'
+    __name__ = 'nodux_sale_payment.add_term'
+    start = StateView('nodux_sale_payment.add_term_form',
+        'nodux_sale_payment.add_term_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Add', 'add_', 'tryton-ok'),
+            Button('Imprimir Credito', 'print_', 'tryton-ok'),
+        ])
+    add_ = StateTransition()
+    add_ = StateTransition()
+    
+    def default_start(self, fields):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        default = {}
+        sale = Sale(Transaction().context['active_id'])
+        default['valor'] = sale.residual_amount
+        print "Default", default
+        return default
+        
+    def transition_add_(self):
+        print "Esto es lo que recibe **", self.start.creditos #aqui estan todas las lineas de credito que seran para los asientos contables
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        active_id = Transaction().context.get('active_id', False)
+        sale = Sale(active_id)
+        Statement = pool.get('account.statement')
+        StatementLine = pool.get('account.statement.line')
+        Date = pool.get('ir.date')
+        
+        statements = Statement.search([
+                ('state', '=', 'draft'),
+                ], order=[('date', 'DESC')])
+        account = (sale.party.account_receivable
+            and sale.party.account_receivable.id
+            or self.raise_user_error('party_without_account_receivable',
+                error_args=(sale.party.name,)))
+                        
+        sale.payment_amount = self.start.cheque + self.start.efectivo
+        sale.save()
+        payment = StatementLine(
+                statement=statements[0].id,
+                date=Date.today(),
+                amount=(self.start.cheque + self.start.efectivo),
+                party=sale.party.id,
+                account=account,
+                description=sale.reference,
+                sale=active_id
+                )
+        payment.save()
+        
+        
+        
+        Sale.workflow_to_end([sale])
+        for c in self.start.creditos:
+            print "Esta es ",c
+            
+        return 'end'
+        
+    
+class Payment_Term(ModelView):
+    'Payment Term Line'
+    __name__ = 'sale_payment.payment'
+    
+    sale = fields.Many2One('sale.sale', 'Sale')
+    fecha = fields.Date('Fecha de pago')
+    monto = fields.Numeric("Valor a pagar")
+    banco = fields.Many2One('bank', 'Banco')
+    numero_cuenta = fields.Many2One('bank.account', 'Numero de Cuenta')
     

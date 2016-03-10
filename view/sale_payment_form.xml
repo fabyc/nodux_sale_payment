@@ -8,26 +8,25 @@ copyright notices and license terms. -->
         position="after">
         <label name="tipo_p"/>
         <field name="tipo_p"/>
-        <label name="recibido"/>
-        <field name="recibido"/>
-        <label name="cambio"/>
-        <field name="cambio"/>
+        <newline/>
         <label name="banco"/>
         <field name="banco"/>
         <label name="numero_cuenta"/>
         <field name="numero_cuenta"/>
-        <label name="fecha_deposito"/>
-        <field name="fecha_deposito"/>
+        <label name="fecha_deposito_cheque"/>
+        <field name="fecha_deposito_cheque"/>
         <label name="titular"/>
         <field name="titular"/>
         <label name="numero_cheque"/>
         <field name="numero_cheque"/>
+        <newline/>
         <label name="numero_tarjeta"/>
         <field name="numero_tarjeta"/>
         <label name="lote"/>
         <field name="lote"/>
         <label name="tipo_tarjeta"/>
         <field name="tipo_tarjeta"/>
+        <newline/>
         <label name="banco_deposito"/>
         <field name="banco_deposito"/>
         <label name="numero_cuenta_deposito"/>
@@ -37,6 +36,10 @@ copyright notices and license terms. -->
         <label name="numero_deposito"/>
         <field name="numero_deposito"/>
         <newline/> 
+        <label name="recibido"/>
+        <field name="recibido"/>
+        <label name="cambio_cliente"/>
+        <field name="cambio_cliente"/>
     </xpath>
 </data>
 

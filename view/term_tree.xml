@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- This file is part of the account_voucher_ar module for Tryton.
+The COPYRIGHT file at the top level of this repository contains
+the full copyright notices and license terms. -->
+<tree string="Formas de pago" editable="top">
+    <field name="fecha" expand="1"/>
+    <field name="banco" expand="1"/>
+    <field name="numero_cuenta" expand="1"/>
+    <field name="monto" expand="1"/>
+</tree>

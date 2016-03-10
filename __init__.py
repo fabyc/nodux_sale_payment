@@ -9,8 +9,11 @@ def register():
         SalePaymentForm,
         Statement,
         Sale,
+        AddTermForm, 
+        Payment_Term,
         module='nodux_sale_payment', type_='model')
     Pool.register(
         WizardSalePayment,
-        module='sale_payment', type_='wizard')
+        WizardAddTerm,
+        module='nodux_sale_payment', type_='wizard')
     

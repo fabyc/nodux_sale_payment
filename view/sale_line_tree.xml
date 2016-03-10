@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- This file is part sale_pos module for Tryton.
+The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
+<form string="Credito" sequence="sequence" editable="bottom">
+    <field name="dias"/>
+    <field name="pagos"/>
+    <field name="payment"/>
+    <field name="efectivo"/>
+    <field name="cheque"/>
+    <field name="nro"/>
+    <field name="banco">
+</form>
+
