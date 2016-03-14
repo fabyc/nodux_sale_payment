@@ -1,0 +1,327 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:account.statement,tipo_pago:"
+msgid "Forma de Pago"
+msgstr "Forma de pago"
+
+msgctxt "field:nodux_sale_payment.add_term_form,banco:"
+msgid "Banco"
+msgstr "Efectivo"
+
+msgctxt "field:nodux_sale_payment.add_term_form,cheque:"
+msgid "Cheque"
+msgstr "Cheque"
+
+msgctxt "field:nodux_sale_payment.add_term_form,creditos:"
+msgid "Formas de Pago"
+msgstr "Formas de pago"
+
+msgctxt "field:nodux_sale_payment.add_term_form,dias:"
+msgid "Numero de dias"
+msgstr "Número de días"
+
+msgctxt "field:nodux_sale_payment.add_term_form,efectivo:"
+msgid "Efectivo"
+msgstr "Efectivo"
+
+msgctxt "field:nodux_sale_payment.add_term_form,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:nodux_sale_payment.add_term_form,nro:"
+msgid "Numero de cheque"
+msgstr "No. de cheque"
+
+msgctxt "field:nodux_sale_payment.add_term_form,pagos:"
+msgid "Numero de pagos"
+msgstr "Número de pagos"
+
+msgctxt "field:nodux_sale_payment.add_term_form,valor:"
+msgid "Total a pagar"
+msgstr "Total a pagar"
+
+msgctxt "field:nodux_sale_payment.add_term_form,verifica_dias:"
+msgid "Credito por dias"
+msgstr "Crédito por días"
+
+msgctxt "field:nodux_sale_payment.add_term_form,verifica_pagos:"
+msgid "Credito por pagos"
+msgstr "Crédito por pagos"
+
+msgctxt "field:sale.payment.form,amount:"
+msgid "Payment amount"
+msgstr "Cantidad a pagar"
+
+msgctxt "field:sale.payment.form,banco:"
+msgid "Banco"
+msgstr "Banco"
+
+msgctxt "field:sale.payment.form,banco_deposito:"
+msgid "Banco"
+msgstr "Banco"
+
+msgctxt "field:sale.payment.form,cambio_cliente:"
+msgid "SU CAMBIO"
+msgstr "SU CAMBIO"
+
+msgctxt "field:sale.payment.form,fecha_deposito:"
+msgid "Fecha de Deposito"
+msgstr "Fecha de depósito"
+
+msgctxt "field:sale.payment.form,fecha_deposito_cheque:"
+msgid "Fecha de Deposito"
+msgstr "Fecha de depósito"
+
+msgctxt "field:sale.payment.form,lote:"
+msgid "Numero de lote"
+msgstr "No. de lote"
+
+msgctxt "field:sale.payment.form,numero_cheque:"
+msgid "Numero de Cheque"
+msgstr "No. de cheque"
+
+msgctxt "field:sale.payment.form,numero_cuenta:"
+msgid "Numero de cuenta"
+msgstr "No. de cuenta"
+
+msgctxt "field:sale.payment.form,numero_cuenta_deposito:"
+msgid "Numero de cuenta de Deposito"
+msgstr "No. de cuenta de depósito"
+
+msgctxt "field:sale.payment.form,numero_deposito:"
+msgid "Numero de Deposito"
+msgstr "No. de depósito"
+
+msgctxt "field:sale.payment.form,numero_tarjeta:"
+msgid "Numero de tarjeta"
+msgstr "No. de tarjeta"
+
+msgctxt "field:sale.payment.form,recibido:"
+msgid "Valor recibido del cliente"
+msgstr "Valor recibido del cliente"
+
+msgctxt "field:sale.payment.form,tipo_p:"
+msgid "Forma de Pago"
+msgstr "Forma de pago"
+
+msgctxt "field:sale.payment.form,tipo_tarjeta:"
+msgid "Tipo de Tarjeta."
+msgstr "Tipo de tarjeta"
+
+msgctxt "field:sale.payment.form,titular:"
+msgid "Titular de la cuenta"
+msgstr "Titular de la cuenta"
+
+msgctxt "field:sale.sale,banco:"
+msgid "Banco"
+msgstr "Banco"
+
+msgctxt "field:sale.sale,banco_deposito:"
+msgid "Banco"
+msgstr "Banco"
+
+msgctxt "field:sale.sale,fecha_deposito:"
+msgid "Fecha de Deposito"
+msgstr "Fecha de depósito"
+
+msgctxt "field:sale.sale,lote:"
+msgid "Numero de lote"
+msgstr "No. de lote"
+
+msgctxt "field:sale.sale,numero_cheque:"
+msgid "Numero de Cheque"
+msgstr "No. de cheque"
+
+msgctxt "field:sale.sale,numero_cuenta:"
+msgid "Numero de cuenta"
+msgstr "No. de cuenta"
+
+msgctxt "field:sale.sale,numero_cuenta_deposito:"
+msgid "Numero de cuenta de Deposito"
+msgstr "No. de cuenta de depósito"
+
+msgctxt "field:sale.sale,numero_deposito:"
+msgid "Numero de Deposito"
+msgstr "No. de depósito"
+
+msgctxt "field:sale.sale,numero_tarjeta:"
+msgid "Numero de tarjeta"
+msgstr "No. de tarjeta"
+
+msgctxt "field:sale.sale,recibido:"
+msgid "Valor recibido del cliente"
+msgstr "Valor recibido del cliente"
+
+msgctxt "field:sale.sale,tipo_p:"
+msgid "Tipo de Pago"
+msgstr "Tipo de pago"
+
+msgctxt "field:sale.sale,tipo_tarjeta:"
+msgid "Tipo de Tarjeta."
+msgstr "Tipo de tarjeta"
+
+msgctxt "field:sale.sale,titular:"
+msgid "Titular de la cuenta"
+msgstr "Titular de la cuenta"
+
+msgctxt "field:sale_payment.payment,banco:"
+msgid "Banco"
+msgstr "Banco"
+
+msgctxt "field:sale_payment.payment,fecha:"
+msgid "Fecha de pago"
+msgstr "Fecha de pago"
+
+msgctxt "field:sale_payment.payment,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:sale_payment.payment,monto:"
+msgid "Valor a pagar"
+msgstr "Valor a pagar"
+
+msgctxt "field:sale_payment.payment,numero_cuenta:"
+msgid "Numero de Cuenta"
+msgstr "Número de cuenta"
+
+msgctxt "field:sale_payment.payment,sale:"
+msgid "Sale"
+msgstr "Venta"
+
+msgctxt "help:nodux_sale_payment.add_term_form,dias:"
+msgid "Ingrese el numero de dias en los que se realizara el pago"
+msgstr "Ingrese el número de días en los que se realizará el pago"
+
+msgctxt "help:nodux_sale_payment.add_term_form,pagos:"
+msgid "Ingrese el numero de pagos en lo que realizara el pago total"
+msgstr "Ingrese el número de pagos en los que realizará el pago total"
+
+msgctxt "help:nodux_sale_payment.add_term_form,verifica_dias:"
+msgid "Seleccione si desea realizar su pago en los dias siguientes"
+msgstr "Seleccione si desea realizar el pago en los días siguientes"
+
+msgctxt "help:nodux_sale_payment.add_term_form,verifica_pagos:"
+msgid "Seleccione si desea realizar sus pagos mensuales"
+msgstr "Seleccione si desea realizar sus pagos mensuales"
+
+msgctxt "help:sale.payment.form,recibido:"
+msgid "Ingrese el monto de dinero que reciba del cliente"
+msgstr "Ingrese el monto de dinero que reciba del cliente"
+
+msgctxt "model:ir.action,name:wizard_add_term"
+msgid "Agregar Credito"
+msgstr "Agregar crédito"
+
+msgctxt "model:nodux_sale_payment.add_term_form,name:"
+msgid "Add Term Form"
+msgstr "Agregar forma de pago"
+
+msgctxt "model:sale_payment.payment,name:"
+msgid "Payment Term Line"
+msgstr "Línea del término de pago"
+
+msgctxt "selection:account.statement,tipo_pago:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:account.statement,tipo_pago:"
+msgid "Cheque"
+msgstr "Cheque"
+
+msgctxt "selection:account.statement,tipo_pago:"
+msgid "Deposito"
+msgstr "Depósito"
+
+msgctxt "selection:account.statement,tipo_pago:"
+msgid "Efectivo"
+msgstr "Efectivo"
+
+msgctxt "selection:account.statement,tipo_pago:"
+msgid "Tarjeta de Credito"
+msgstr "Tarjeta de crédito"
+
+msgctxt "selection:sale.payment.form,tipo_p:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:sale.payment.form,tipo_p:"
+msgid "Cheque"
+msgstr "Cheque"
+
+msgctxt "selection:sale.payment.form,tipo_p:"
+msgid "Deposito"
+msgstr "Depósito"
+
+msgctxt "selection:sale.payment.form,tipo_p:"
+msgid "Efectivo"
+msgstr "Efectivo"
+
+msgctxt "selection:sale.payment.form,tipo_p:"
+msgid "Tarjeta de Credito"
+msgstr "Tarjeta de crédito"
+
+msgctxt "selection:sale.payment.form,tipo_tarjeta:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:sale.payment.form,tipo_tarjeta:"
+msgid "MASTERCARD"
+msgstr "MASTERCARD"
+
+msgctxt "selection:sale.payment.form,tipo_tarjeta:"
+msgid "VISA"
+msgstr "VISA"
+
+msgctxt "selection:sale.sale,tipo_tarjeta:"
+msgid ""
+msgstr ""
+
+msgctxt "selection:sale.sale,tipo_tarjeta:"
+msgid "MASTERCARD"
+msgstr "MASTERCARD"
+
+msgctxt "selection:sale.sale,tipo_tarjeta:"
+msgid "VISA"
+msgstr "VISA"
+
+msgctxt "view:nodux_sale_payment.add_term_form:"
+msgid "Credito"
+msgstr "Crédito"
+
+msgctxt "view:nodux_sale_payment.add_term_form:"
+msgid "Forma de pago"
+msgstr "Forma de pago"
+
+msgctxt "view:nodux_sale_payment.add_term_form:"
+msgid "Lineas de Pago"
+msgstr "Líneas de Pago"
+
+msgctxt "view:nodux_sale_payment.add_term_form:"
+msgid "Monto de abono del cliente"
+msgstr "Importe de abono del cliente"
+
+msgctxt "view:nodux_sale_payment.add_term_form:"
+msgid "Total a pagar de la factura"
+msgstr "Total a pagar de la factura"
+
+msgctxt "view:sale.sale:"
+msgid "Agregar Credito"
+msgstr "Agregar crédito"
+
+msgctxt "view:sale_payment.payment:"
+msgid "Formas de pago"
+msgstr "Formas de pago"
+
+msgctxt "wizard_button:nodux_sale_payment.add_term,start,add_:"
+msgid "Add"
+msgstr "Agregar"
+
+msgctxt "wizard_button:nodux_sale_payment.add_term,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:nodux_sale_payment.add_term,start,print_:"
+msgid "Imprimir Credito"
+msgstr "Imprimir crédito"

@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <!-- This file is part sale_pos module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
-<form string="Credito" colspan="6">
-    <separator string="Total a pagar de la factura" colspan="6" id="monto"/>
+
+<form string="Credito" >
+    <separator string="Total a pagar de la factura" colspan="6" id="total"/>
     <label name="valor"/>
     <field name="valor"/>
     <newline/>
@@ -16,7 +17,7 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <label name="nro"/>
     <field name="nro"/>
     <label name="banco"/>
-    <field name="banco" xexpand="1"/>
+    <field name="banco"/>
     <newline/>
     <separator string="Forma de pago" colspan="4" id="forma"/>
     <label name="verifica_dias"/>
@@ -34,5 +35,5 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
             <field name="creditos" mode="tree" colspan="3"
                 view_ids="nodux_sale_payment.term_view_tree"/>
         </page>
-       </notebook>
+    </notebook>
 </form>

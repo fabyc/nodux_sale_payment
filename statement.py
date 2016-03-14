@@ -17,7 +17,7 @@ class Statement:
     tipo_pago = fields.Selection([
             ('',''),
             ('efectivo','Efectivo'),
-            ('tarjeta','Tarjeta de Debito'),
+            ('tarjeta','Tarjeta de Credito'),
             ('deposito','Deposito'),
             ('cheque','Cheque'),
             ],'Forma de Pago')

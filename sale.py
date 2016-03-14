@@ -18,8 +18,10 @@ _ZERO = Decimal('0.0')
 
 class Sale():
     __name__ = 'sale.sale'
+    acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo")
     
     tipo_p = fields.Char('Tipo de Pago')
+    
     recibido = fields.Numeric('Valor recibido del cliente',
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits'])
@@ -120,25 +122,20 @@ class Sale():
         pool = Pool()
         Invoice = pool.get('account.invoice')
         Date = pool.get('ir.date')
-        print "Los sales ",sales
         for sale in sales:
-            print "Los sales ",sale
             if sale.state == 'draft':
                 cls.process([sale])
             if sale.state == 'quotation':
                 cls.confirm([sale])
             if sale.state == 'confirmed':
                 cls.process([sale])
-            print "Los sales ",sale
             if not sale.invoices and sale.invoice_method == 'order':
                 cls.raise_user_error('not_customer_invoice')
 
             grouping = getattr(sale.party, 'sale_invoice_grouping_method',
                 False)
             if sale.invoices and not grouping:
-                print "Donde debe hacer la factura", sale.invoices
                 for invoice in sale.invoices:
-                    print "por cada factura", invoice
                     if invoice.state == 'draft':
                         if not getattr(invoice, 'invoice_date', False):
                             invoice.invoice_date = Date.today()
@@ -157,7 +154,6 @@ class Sale():
                     if payment.party != invoice.party:
                         payment.party = invoice.party
                     payment.save()
-                    print "Aqui esta haciendo el proceso de tpv", invoice
             if sale.is_done():
                 cls.do([sale])
                 
@@ -180,7 +176,7 @@ class SalePaymentForm():
     tipo_p = fields.Function(fields.Char('Tipo de Pago'),'on_change_with_journal')
     """
     tipo_p = fields.Selection([
-            ('',''),
+            ('',''), 
             ('efectivo','Efectivo'),
             ('tarjeta','Tarjeta de Credito'),
             ('deposito','Deposito'),
@@ -388,15 +384,25 @@ class WizardSalePayment(Wizard):
                 sale=active_id
                 )
             payment.save()
-        
-        sale.description = sale.reference
-        sale.save()
-        Sale.workflow_to_end([sale])
-        
-        if sale.total_amount != sale.paid_amount:
-            return 'end'
-        if sale.state != 'draft':
-            return 'end'
+        if sale.acumulativo != True: 
+            sale.description = sale.reference
+            sale.save()
+            Sale.workflow_to_end([sale])
+            
+            if sale.total_amount != sale.paid_amount:
+                return 'end'
+            if sale.state != 'draft':
+                return 'end'
+        else:
+            if sale.total_amount != sale.paid_amount:
+                return 'start'
+            if sale.state != 'draft':
+                return 'end'
+
+            sale.description = sale.reference
+            sale.save()
+
+            Sale.workflow_to_end([sale])
         
         return 'end'
 
@@ -424,7 +430,6 @@ class AddTermForm(ModelView):
     banco = fields.Many2One('bank', 'Banco')
     valor = fields.Numeric('Total a pagar')
     
-    verifica_dias = fields.Boolean("Credito por dias", help = u"Selecciona si desea realizar su pago en los dias siguientes")
     @fields.depends('dias', 'creditos', 'efectivo', 'cheque', 'verifica_dias', 'valor')
     def on_change_dias(self):
         if self.dias:
@@ -525,7 +530,6 @@ class WizardAddTerm(Wizard):
         default = {}
         sale = Sale(Transaction().context['active_id'])
         default['valor'] = sale.residual_amount
-        print "Default", default
         return default
         
     def transition_add_(self):
@@ -545,29 +549,36 @@ class WizardAddTerm(Wizard):
             and sale.party.account_receivable.id
             or self.raise_user_error('party_without_account_receivable',
                 error_args=(sale.party.name,)))
-                        
-        sale.payment_amount = self.start.cheque + self.start.efectivo
-        sale.save()
-        payment = StatementLine(
-                statement=statements[0].id,
-                date=Date.today(),
-                amount=(self.start.cheque + self.start.efectivo),
-                party=sale.party.id,
-                account=account,
-                description=sale.reference,
-                sale=active_id
-                )
-        payment.save()
         
-        
-        
-        Sale.workflow_to_end([sale])
-        for c in self.start.creditos:
-            print "Esta es ",c
+        if self.start.cheque:
+            m_ch = self.start.cheque
+        else:
+            m_ch = Decimal(0.0)
             
+        if self.start.efectivo:
+            m_e = self.start.efectivo
+        else:
+            m_e = Decimal(0.0)
+        print "Valores que se pagaran" ,m_ch, m_e    
+        sale.payment_amount = m_ch + m_e
+        sale.save()
+        
+        valor = m_ch + m_e
+        if valor != 0:
+            payment = StatementLine(
+                    statement=statements[0].id,
+                    date=Date.today(),
+                    amount=(m_ch + m_e),
+                    party=sale.party.id,
+                    account=account,
+                    description=sale.reference,
+                    sale=active_id
+                    )
+            payment.save()
+        Sale.workflow_to_end([sale])
+        
         return 'end'
         
-    
 class Payment_Term(ModelView):
     'Payment Term Line'
     __name__ = 'sale_payment.payment'

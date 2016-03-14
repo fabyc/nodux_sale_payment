@@ -2,6 +2,11 @@
 <!-- This file is part sale_pos module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
 <data>
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='shop']" position="before">
+        <label name="acumulativo"/>
+        <field name="acumulativo"/>
+    </xpath>
+    
     <xpath expr="/form/group[@id= 'cash']/button[@name='add_sum']" position="replace">
         <button name="wizard_add_term" string="Agregar Credito" icon="tryton-list-add"/>
     </xpath>
