@@ -9,7 +9,7 @@ copyright notices and license terms. -->
             <field name="wiz_name">nodux_sale_payment.add_term</field>
         </record>
         <record model="ir.ui.view" id="add_term_view_form">
-            <field name="model">nodux_sale_payment.add_term_form</field>
+            <field name="model">nodux_sale_payment.add_payment_term_form</field>
             <field name="type">form</field>
             <field name="name">add_term_form</field>
         </record>

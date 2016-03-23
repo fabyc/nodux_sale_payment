@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This file is part sale_pos module for Tryton.
+<!-- This file is part nodux_sale_payment module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
 
 <form string="Credito" >
@@ -18,6 +18,10 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <field name="nro"/>
     <label name="banco"/>
     <field name="banco"/>
+    <label name="titular"/>
+    <field name="titular"/>
+    <label name="cuenta"/>
+    <field name="cuenta"/>
     <newline/>
     <separator string="Forma de pago" colspan="4" id="forma"/>
     <label name="verifica_dias"/>
@@ -27,8 +31,11 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <newline/>
     <label name="verifica_pagos"/>
     <field name="verifica_pagos"/>
+    <label name="dias_pagos"/>
+    <field name="dias_pagos"/>
     <label name="pagos"/>
     <field name="pagos"/>
+    
     <newline/>
     <notebook colspan="3">
         <page string="Lineas de Pago" id="pago">
