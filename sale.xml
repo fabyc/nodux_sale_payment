@@ -4,15 +4,6 @@ The COPYRIGHT file at the top level of this repository contains the full
 copyright notices and license terms. -->
 <tryton>
     <data>
-        <record model="ir.action.wizard" id="wizard_add_term">
-            <field name="name">Agregar Credito</field>
-            <field name="wiz_name">nodux_sale_payment.add_term</field>
-        </record>
-        <record model="ir.ui.view" id="add_term_view_form">
-            <field name="model">nodux_sale_payment.add_payment_term_form</field>
-            <field name="type">form</field>
-            <field name="name">add_term_form</field>
-        </record>
         <record model="ir.ui.view" id="sale_payment_view_form">
             <field name="model">sale.payment.form</field>
             <field name="inherit"
@@ -26,12 +17,6 @@ copyright notices and license terms. -->
                 ref="sale_pos.sale_pos_view_form"/>
             <field name="name">sale_pos_form</field>
         </record>
-        
-        <record model="ir.ui.view" id="term_view_tree">
-            <field name="model">sale_payment.payment</field>
-            <field name="type">tree</field>
-            <field name="name">term_tree</field>
-        </record> 
         
     </data>
 </tryton>
