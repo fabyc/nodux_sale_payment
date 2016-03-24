@@ -250,10 +250,6 @@ class SalePaymentForm():
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits'])
         
-    @classmethod
-    def __setup__(cls):
-        super(SalePaymentForm, cls).__setup__()
-        cls._order.insert(0, ('sequence', 'ASC'))
      
     @fields.depends('payment_amount', 'recibido')
     def on_change_recibido(self):
@@ -290,7 +286,6 @@ class WizardSalePayment(Wizard):
                 'not_tipo_p': ('No ha configurado el tipo de pago. Dirijase a: \n->Todos los estados de cuenta (Seleeccione el estado de cuenta) \n->Forma de pago.'),
                 })
 
-    
     def default_start(self, fields):
         pool = Pool()
         Sale = pool.get('sale.sale')
