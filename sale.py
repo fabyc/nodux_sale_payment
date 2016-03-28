@@ -297,7 +297,10 @@ class WizardSalePayment(Wizard):
         Date = pool.get('ir.date')
         print "La sale device ", sale_device
         Statement=pool.get('account.statement')
-        statement = Statement.search([('journal', '=', sale_device.journal.id)])
+        if sale_device.journal:
+            statement = Statement.search([('journal', '=', sale_device.journal.id)])
+        else:
+            self.raise_user_error('No se ha creado un estado de cuenta para %s', (sale_device.name))
         
         if not sale.check_enough_stock():
             return
