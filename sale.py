@@ -627,25 +627,36 @@ class WizardSalePayment(Wizard):
                 sale=active_id
                 )
             payment.save()
-        if sale.acumulativo != True: 
+            
+        if sale.acumulativo != True:
             sale.description = sale.reference
             sale.save()
             Sale.workflow_to_end([sale])
+            Invoice = Pool().get('account.invoice')
+            invoices = Invoice.search([('description', '=', sale.description)])
+            InvoiceReport = Pool().get('account.invoice', type='report')
+            print_ = StateAction('account_invoice.report_invoice') 
+            for i in invoices:
+                invoice = i
+            resultado = InvoiceReport.execute([invoice.id], {})
             
             if sale.total_amount != sale.paid_amount:
+                return 'print_'
                 return 'end'
             if sale.state != 'draft':
+                return 'print_'
                 return 'end'
         else:
             if sale.total_amount != sale.paid_amount:
                 return 'start'
             if sale.state != 'draft':
                 return 'end'
-
+            return 'print'
             sale.description = sale.reference
             sale.save()
 
             Sale.workflow_to_end([sale])
         
         return 'end'
+        
 
