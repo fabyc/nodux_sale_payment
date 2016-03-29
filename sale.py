@@ -102,12 +102,29 @@ class Sale():
                 'print_ticket': {
                     'invisible':~Eval('acumulativo', False)
                     },
+                    
                 'wizard_sale_payment': {
                     'invisible':Eval('paid_amount', 'total_amount')
                     },
+                    
+                'wizard_add_product': {
+                    'invisible':Eval('paid_amount', 'total_amount')
+                    },
                 })
+        cls.payment_term.states['readonly'] |= Eval('paid_amount')
+        cls.payment_term.depends.append('paid_amount')
+        cls.lines.states['readonly'] |= Eval('paid_amount')
+        cls.lines.depends.append('paid_amount')
+        cls.self_pick_up.states['readonly'] |= Eval('paid_amount')
+        cls.self_pick_up.depends.append('paid_amount')
+        cls.acumulativo.states['readonly'] |= Eval('paid_amount')
+                
+    @staticmethod
+    def default_sale_date():
+        Date = Pool().get('ir.date')
+        date = Date.today()
+        return date
 
-    
     @classmethod
     def get_amount(cls, sales, names):
         untaxed_amount = {}

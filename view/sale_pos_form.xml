@@ -2,11 +2,60 @@
 <!-- This file is part sale_pos module for Tryton.
 The COPYRIGHT file at the top level of this repository contains the full copyright notices and license terms. -->
 <data>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='untaxed_amount']" position="replace">
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='untaxed_amount']" position="replace">
+    </xpath>
+    
     <xpath expr="/form/notebook/page[@id='sale']/label[@name='shop']" position="before">
         <label name="acumulativo"/>
         <field name="acumulativo"/>
     </xpath>
     
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='tax_amount']" position="replace">
+        <label name="subtotal_12"/>
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='tax_amount']" position="replace">
+        <field name="subtotal_12"/>
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='subtotal_12']" position="after">
+        <label name="subtotal_0"/>
+        <field name="subtotal_0"/>
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='subtotal_0']" position="after">
+        <label name="untaxed_amount"/>
+        <field name="untaxed_amount"/>
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='untaxed_amount']" position="after">
+        <label name="tax_amount"/>
+        <field name="tax_amount"/>
+    </xpath>
+    
     <xpath expr="/form/group[@id= 'cash']/button[@name='add_sum']" position="replace">
     </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='reference']" position="replace">
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='reference']" position="replace">
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='ticket_number']" position="replace">
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='ticket_number']" position="replace">
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='pos_create_date']" position="replace">
+    </xpath>
+    
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='pos_create_date']" position="replace">
+    </xpath>
+    
 </data>
