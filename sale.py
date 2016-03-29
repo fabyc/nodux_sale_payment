@@ -31,11 +31,18 @@ tipoPago = {
 
 class Sale():
     __name__ = 'sale.sale'
-    
     acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo",  states={
                 'readonly': ~Eval('active', True),
                 })
-                    
+            
+    subtotal_0 = fields.Function(fields.Numeric(u'Subtotal 0%',
+            digits=(16, Eval('currency_digits', 2)),
+            depends=['currency_digits']), 'get_amount')
+            
+    subtotal_12 = fields.Function(fields.Numeric(u'Subtotal 12%',
+            digits=(16, Eval('currency_digits', 2)),
+            depends=['currency_digits']), 'get_amount')
+            
     tipo_p = fields.Char('Tipo de Pago')
     
     recibido = fields.Numeric('Valor recibido del cliente',
@@ -101,6 +108,7 @@ class Sale():
                 'invisible': Eval('tipo_p') != 'deposito',
                 })
                 
+    
     @classmethod
     def __setup__(cls):
         super(Sale, cls).__setup__()
@@ -124,13 +132,15 @@ class Sale():
         cls.self_pick_up.states['readonly'] |= Eval('paid_amount')
         cls.self_pick_up.depends.append('paid_amount')
         cls.acumulativo.states['readonly'] |= Eval('paid_amount')
-                
+        cls.party.states['readonly'] |= Eval('paid_amount')
+    
     @staticmethod
     def default_sale_date():
         Date = Pool().get('ir.date')
         date = Date.today()
+        print date
         return date
-
+        
     @classmethod
     def get_amount(cls, sales, names):
         untaxed_amount = {}
@@ -239,7 +249,7 @@ class Sale():
                 del result[key]
         return result
         
-    @fields.depends('lines', 'currency', 'party')
+    @fields.depends('lines', 'currency')
     def on_change_lines(self):
         pool = Pool()
         Tax = pool.get('account.tax')
@@ -307,7 +317,7 @@ class Sale():
             changes['total_amount'] = self.currency.round(
                 changes['total_amount'])
         return changes
-                   
+        
     @classmethod
     @ModelView.button
     def process(cls, sales):
@@ -498,13 +508,13 @@ class WizardSalePayment(Wizard):
         user = User(Transaction().user)
         sale_device = sale.sale_device or user.sale_device or False
         Date = pool.get('ir.date')
-        print "La sale device ", sale_device
         Statement=pool.get('account.statement')
+        
         if sale_device.journal:
             statement = Statement.search([('journal', '=', sale_device.journal.id)])
         else:
             self.raise_user_error('No se ha creado un estado de cuenta para %s', (sale_device.name))
-        
+            
         if not sale.check_enough_stock():
             return
 
@@ -518,7 +528,6 @@ class WizardSalePayment(Wizard):
                     continue
                 if line.product not in products:
                     products.append(line.product)
-            print "Las locaciones ", locations
             # get quantity
             with Transaction().set_context(locations=locations):
                 quantities = Product.get_quantity(
@@ -530,7 +539,6 @@ class WizardSalePayment(Wizard):
             for line in sale.lines:
                 if line.product and line.product.id in quantities:
                     qty = quantities[line.product.id]
-                print "la qty ", qty
                 if qty < line.quantity:
                     line.raise_user_warning('not_enough_stock_%s' % line.id,
                            'No hay suficiente stock del producto: "%s"'
@@ -569,7 +577,6 @@ class WizardSalePayment(Wizard):
         else:
             to_pay= amount
        
-        print "tipo de pago" , tipo_p
         return {
             'journal': sale_device.journal.id
                 if sale_device.journal else None,
@@ -594,7 +601,6 @@ class WizardSalePayment(Wizard):
         Sale = pool.get('sale.sale')
         Statement = pool.get('account.statement')
         StatementLine = pool.get('account.statement.line')
-        
         form = self.start
         statements = Statement.search([
                 ('journal', '=', form.journal),
@@ -650,7 +656,6 @@ class WizardSalePayment(Wizard):
                 sale=active_id
                 )
             payment.save()
-            
         if sale.acumulativo != True:
             sale.description = sale.reference
             sale.save()
