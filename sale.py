@@ -3,14 +3,17 @@
 # copyright notices and license terms.
 #! -*- coding: utf8 -*-
 from decimal import Decimal
-from trytond.model import ModelView, fields, ModelSQL
+from trytond.model import ModelView, fields, ModelSQL, Workflow
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Bool, Eval, Not
+from trytond.pyson import Bool, Eval, Not, If, PYSONEncoder, Id
 from trytond.transaction import Transaction
-from trytond.wizard import Wizard, StateView, StateTransition, Button
+from trytond.wizard import Wizard, StateView, StateTransition, Button, StateAction
 from trytond import backend
 from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta
+from itertools import groupby, chain
+from functools import partial
+from trytond.transaction import Transaction
 
 __all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale']
 __metaclass__ = PoolMeta
@@ -28,8 +31,11 @@ tipoPago = {
 
 class Sale():
     __name__ = 'sale.sale'
-    acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo")
     
+    acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo",  states={
+                'readonly': ~Eval('active', True),
+                })
+                    
     tipo_p = fields.Char('Tipo de Pago')
     
     recibido = fields.Numeric('Valor recibido del cliente',
