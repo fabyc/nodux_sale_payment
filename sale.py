@@ -102,6 +102,9 @@ class Sale():
                 'print_ticket': {
                     'invisible':~Eval('acumulativo', False)
                     },
+                'wizard_sale_payment': {
+                    'invisible':Eval('paid_amount', 'total_amount')
+                    },
                 })
 
                 
