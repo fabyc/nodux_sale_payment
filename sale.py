@@ -467,10 +467,11 @@ class WizardSalePayment(Wizard):
                 return 'end'
         else:
             if sale.total_amount != sale.paid_amount:
+                return 'print_'
                 return 'start'
             if sale.state != 'draft':
+                return 'print_'
                 return 'end'
-            return 'print'
             sale.description = sale.reference
             sale.save()
 
