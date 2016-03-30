@@ -9,6 +9,13 @@ The COPYRIGHT file at the top level of this repository contains the full copyrig
     <xpath expr="/form/notebook/page[@id='sale']/field[@name='untaxed_amount']" position="replace">
     </xpath>
     
+    <xpath expr="/form/notebook/page[@id='sale']/label[@name='party']" position="replace">
+        <label name="party_2"/>
+    </xpath>
+    <xpath expr="/form/notebook/page[@id='sale']/field[@name='party']" position="replace">
+        <field name="party_2"/>
+    </xpath>
+    
     <xpath expr="/form/notebook/page[@id='sale']/label[@name='shop']" position="before">
         <label name="acumulativo"/>
         <field name="acumulativo"/>

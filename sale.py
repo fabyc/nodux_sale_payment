@@ -35,6 +35,10 @@ class Sale():
                 'readonly': ~Eval('active', True),
                 })
             
+    party_2 = fields.Function(fields.Many2One('party.party', 'Party', states={
+                'readonly': ~Eval('active', True),
+                }), 'on_change_with_party_2')
+        
     subtotal_0 = fields.Function(fields.Numeric(u'Subtotal 0%',
             digits=(16, Eval('currency_digits', 2)),
             depends=['currency_digits']), 'get_amount')
@@ -134,6 +138,22 @@ class Sale():
         cls.acumulativo.states['readonly'] |= Eval('paid_amount')
         cls.party.states['readonly'] |= Eval('paid_amount')
     
+    @staticmethod
+    def default_party_2():
+        User = Pool().get('res.user')
+        user = User(Transaction().user)
+        return user.shop.party.id if user.shop and user.shop.party else None
+            
+    @fields.depends('party_2')
+    def on_change_with_party_2(self, name=None):
+        if self.party_2:
+            print "LLega al metodo con ", self.party_2
+            res ={}
+            res['party'] = self.party_2
+            res['party_2'] = self.party_2
+            print "Lo que devolvera ", res
+            return res
+        
     @staticmethod
     def default_sale_date():
         Date = Pool().get('ir.date')

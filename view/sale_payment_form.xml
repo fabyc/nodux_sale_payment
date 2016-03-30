@@ -38,7 +38,7 @@ copyright notices and license terms. -->
         <newline/> 
         <label name="recibido"/>
         <field name="recibido"/>
-        <label name="cambio_cliente"/>
+        <label name="cambio_cliente" />
         <field name="cambio_cliente"/>
     </xpath>
 </data>
