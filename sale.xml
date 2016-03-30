@@ -17,32 +17,6 @@ copyright notices and license terms. -->
                 ref="sale_pos.sale_pos_view_form"/>
             <field name="name">sale_pos_form</field>
         </record>
-        
-        <!-- Reports-->
-        <record model="ir.action.report" id="sale_pos.report_sale_ticket">
-            <field name="name">Sale Ticket</field>
-            <field name="model">sale.sale</field>
-            <field name="report_name">sale_pos.sale_pos_ticket</field>
-            <field name="report">nodux_sale_payment/sale_pos_ticket.odt</field>
-        </record>
-
-        <record model="ir.action.report" id="sale_pos.report_sales_summary">
-            <field name="name">Sales Summary</field>
-            <field name="model">sale.sale</field>
-            <field name="report_name">sale_pos.sales_summary</field>
-            <field name="report">nodux_sale_payment/sale_pos_summary.odt</field>
-            <field name="style">company/letter.odt</field>
-        </record>
-
-        <record model="ir.action.report" id="sale_pos.report_sales_summary_by_party">
-            <field name="name">Sales Summary by Party</field>
-            <field name="model">sale.sale</field>
-            <field name="report_name">sale_pos.sales_summary_by_party</field>
-            <field name="report">nodux_sale_payment/sale_pos_summary_by_party.odt</field>
-            <field name="style">company/letter.odt</field>
-        </record>
-        
-        
     </data>
 </tryton>
 
