@@ -18,20 +18,18 @@ copyright notices and license terms. -->
             <field name="name">sale_pos_form</field>
         </record>
         
-         <record model="ir.action.report" id="account_invoice.report_invoice">
-            <field name="name">Factura</field>
-            <field name="model">account.invoice</field>
-            <field name="report_name">account.invoice</field>
+         <record model="ir.action.report" id="report_invoice_pos">
+            <field name="name">Invoice</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">nodux_sale_payment.invoice_pos</field>
             <field name="report">nodux_sale_payment/invoice.odt</field>
             <field name="style">nodux_sale_payment/header_A4.odt</field>
         </record>
-        
-        <record model="ir.action.keyword" id="report_invoice">
+        <record model="ir.action.keyword" id="report_invoice_pos_keyword">
             <field name="keyword">form_print</field>
             <field name="model">sale.sale,-1</field>
-            <field name="action" ref="account_invoice.report_invoice"/>
+            <field name="action" ref="report_invoice_pos"/>
         </record>
-        
     </data>
 </tryton>
 
