@@ -504,7 +504,50 @@ class InvoiceReportPos(Report):
         user = User(Transaction().user)
         localcontext['company'] = user.company
         localcontext['invoice'] = invoice
+        localcontext['subtotal0'] = cls._get_subtotal_0(Sale, sale)
+        localcontext['subtotal12'] = cls._get_subtotal_12(Sale, sale)
+        localcontext['descuento'] = cls._get_descuento(Sale, sale)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)   
                 
+    @classmethod
+    def _get_descuento(cls, Sale, sale):
+        descuento = Decimal(0.00)
+        descuento_parcial = Decimal(0.00)
+                
+        for line in sale.lines:
+            descuento_parcial = Decimal(line.product.template.list_price - line.unit_price)
+            if descuento_parcial > 0:
+                descuento = descuento + descuento_parcial
+            else:
+                descuento = Decimal(0.00)
+        print "d", descuento
+        return descuento
+    
+    @classmethod
+    def _get_subtotal_12(cls, Sale, sale):
+        subtotal12 = Decimal(0.00)
+        pool = Pool()
+        
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '12':
+                        subtotal12= subtotal12 + (line.amount)
+        print "12", subtotal12
+        return subtotal12
+                 
+    @classmethod
+    def _get_subtotal_0(cls, Sale, sale):
+        subtotal0 = Decimal(0.00)
+        pool = Pool()
+        
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '0':
+                        subtotal0= subtotal0 + (line.amount)
+        print "0", subtotal0
+        return subtotal0
+
