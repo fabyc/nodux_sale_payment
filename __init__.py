@@ -13,4 +13,6 @@ def register():
     Pool.register(
         WizardSalePayment,
         module='nodux_sale_payment', type_='wizard')
-    
+    Pool.register(
+        InvoiceReportPos,
+        module='nodux_sale_payment', type_='report')
