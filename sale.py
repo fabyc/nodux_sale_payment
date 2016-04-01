@@ -13,9 +13,11 @@ from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta
 from itertools import groupby, chain
 from functools import partial
+from trytond.report import Report
 from trytond.transaction import Transaction
+import os
 
-__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale']
+__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
@@ -283,6 +285,8 @@ class WizardSalePayment(Wizard):
     'Wizard Sale Payment'
     __name__ = 'sale.payment'  
     
+    print_ = StateAction('nodux_sale_payment.report_invoice_pos')
+    
     @classmethod
     def __setup__(cls):
         super(WizardSalePayment, cls).__setup__()
@@ -454,23 +458,25 @@ class WizardSalePayment(Wizard):
             Invoice = Pool().get('account.invoice')
             invoices = Invoice.search([('description', '=', sale.description)])
             InvoiceReport = Pool().get('account.invoice', type='report')
-            print_ = StateAction('account_invoice.report_invoice') 
             for i in invoices:
                 invoice = i
             resultado = InvoiceReport.execute([invoice.id], {})
-            
+
+            if sale.total_amount == sale.paid_amount:
+                return 'print_'
+                return 'end'
+                
             if sale.total_amount != sale.paid_amount:
                 return 'print_'
                 return 'end'
+                
             if sale.state != 'draft':
                 return 'print_'
                 return 'end'
         else:
             if sale.total_amount != sale.paid_amount:
-                return 'print_'
                 return 'start'
             if sale.state != 'draft':
-                return 'print_'
                 return 'end'
             sale.description = sale.reference
             sale.save()
@@ -479,4 +485,26 @@ class WizardSalePayment(Wizard):
         
         return 'end'
         
-
+class InvoiceReportPos(Report):
+    __name__ = 'nodux_sale_payment.invoice_pos'
+    
+    
+    @classmethod
+    def parse(cls, report, records, data, localcontext):
+        pool = Pool()
+        User = pool.get('res.user')
+        Invoice = pool.get('account.invoice')
+        Sale = pool.get('sale.sale')
+        sale = records[0]
+        
+        invoices = Invoice.search([('description', '=', sale.description)])
+        for i in invoices:
+            invoice = i
+        
+        user = User(Transaction().user)
+        localcontext['company'] = user.company
+        localcontext['invoice'] = invoice
+        #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
+        return super(InvoiceReportPos, cls).parse(report, records, data,
+                localcontext=localcontext)   
+                
