@@ -118,7 +118,7 @@ class Sale():
         if self.acumulativo:
             if self.acumulativo == True and self.party.vat_number == '9999999999999':
                 res['acumulativo'] = False
-                self.raise_user_error('Plan acumulativo no permitido para consumidor final')
+                return res
         return res
         
     @classmethod
@@ -315,11 +315,6 @@ class WizardSalePayment(Wizard):
         Date = pool.get('ir.date')
         Statement=pool.get('account.statement')
         
-        if sale.party.name == 'CONSUMIDOR FINAL' and sale.acumulativo == True:
-            self.raise_user_error("No puede aplicar plan acumulativo a cliente: CONSUMIDOR FINAL")
-        elif sale.party.name == '9999999999999' and sale.acumulativo == True:
-            self.raise_user_error("No puede aplicar plan acumulativo a cliente: CONSUMIDOR FINAL")
-            
         if sale_device.journal:
             statement = Statement.search([('journal', '=', sale_device.journal.id)])
         else:
