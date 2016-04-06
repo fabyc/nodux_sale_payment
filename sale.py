@@ -111,6 +111,16 @@ class Sale():
                     },
                 })
     
+    @fields.depends('acumulativo', 'party')
+    def on_change_acumulativo(self):
+        pool = Pool()
+        res= {}
+        if self.acumulativo:
+            if self.acumulativo == True and self.party.vat_number == '9999999999999':
+                res['acumulativo'] = False
+                self.raise_user_error('Plan acumulativo no permitido para consumidor final')
+        return res
+        
     @classmethod
     @ModelView.button
     def process(cls, sales):
