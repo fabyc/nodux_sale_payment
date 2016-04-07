@@ -467,10 +467,6 @@ class WizardSalePayment(Wizard):
             Sale.workflow_to_end([sale])
             Invoice = Pool().get('account.invoice')
             invoices = Invoice.search([('description', '=', sale.description)])
-            InvoiceReport = Pool().get('account.invoice', type='report')
-            for i in invoices:
-                invoice = i
-            resultado = InvoiceReport.execute([invoice.id], {})
 
             if sale.total_amount == sale.paid_amount:
                 return 'print_'
@@ -508,12 +504,17 @@ class InvoiceReportPos(Report):
         sale = records[0]
         
         invoices = Invoice.search([('description', '=', sale.description)])
-        for i in invoices:
-            invoice = i
-        
+        if invoices:
+            for i in invoices:
+                invoice = i
+                invoice_e = 'true'
+        else:
+            invoice_e = 'false'
+            invoice = sale
         user = User(Transaction().user)
         localcontext['company'] = user.company
         localcontext['invoice'] = invoice
+        localcontext['invoice_e'] = invoice_e
         localcontext['subtotal0'] = cls._get_subtotal_0(Sale, sale)
         localcontext['subtotal12'] = cls._get_subtotal_12(Sale, sale)
         localcontext['descuento'] = cls._get_descuento(Sale, sale)
@@ -532,7 +533,6 @@ class InvoiceReportPos(Report):
                 descuento = descuento + descuento_parcial
             else:
                 descuento = Decimal(0.00)
-        print "d", descuento
         return descuento
     
     @classmethod
@@ -545,7 +545,6 @@ class InvoiceReportPos(Report):
                 for t in line.taxes:
                     if str('{:.0f}'.format(t.rate*100)) == '12':
                         subtotal12= subtotal12 + (line.amount)
-        print "12", subtotal12
         return subtotal12
                  
     @classmethod
@@ -558,6 +557,5 @@ class InvoiceReportPos(Report):
                 for t in line.taxes:
                     if str('{:.0f}'.format(t.rate*100)) == '0':
                         subtotal0= subtotal0 + (line.amount)
-        print "0", subtotal0
         return subtotal0
 
