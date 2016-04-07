@@ -2,109 +2,16 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:sale.payment:"
+msgid ""
+"No ha configurado el tipo de pago. Dirijase a: \n"
+"->Todos los estados de cuenta (Seleeccione el estado de cuenta) \n"
+"->Forma de pago."
+msgstr ""
+
 msgctxt "field:account.statement,tipo_pago:"
 msgid "Forma de Pago"
 msgstr "Forma de pago"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,banco:"
-msgid "Banco"
-msgstr "Banco"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,cheque:"
-msgid "Cheque"
-msgstr "Cheque"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,creditos:"
-msgid "Formas de Pago"
-msgstr "Formas de pago"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,cuenta:"
-msgid "Numero de la cuenta"
-msgstr "Número de la cuenta"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,dias:"
-msgid "Numero de dias"
-msgstr "Número de días"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,dias_pagos:"
-msgid "Numero de dias para pagos"
-msgstr "Numero de días para pagos"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,efectivo:"
-msgid "Efectivo"
-msgstr "Efectivo"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,nro:"
-msgid "Numero de cheque"
-msgstr "No. de cheque"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,pagos:"
-msgid "Numero de pagos"
-msgstr "Número de pagos"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,titular:"
-msgid "Titular de la cuenta"
-msgstr "Titular de la cuenta"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,valor:"
-msgid "Total a pagar"
-msgstr "Total a pagar"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,verifica_dias:"
-msgid "Credito por dias"
-msgstr "Crédito por días"
-
-msgctxt "field:nodux_sale_payment.add_payment_term_form,verifica_pagos:"
-msgid "Credito por pagos"
-msgstr "Crédito por pagos"
-
-msgctxt "field:nodux_sale_payment.add_term_form,banco:"
-msgid "Banco"
-msgstr "Banco"
-
-msgctxt "field:nodux_sale_payment.add_term_form,cheque:"
-msgid "Cheque"
-msgstr "Cheque"
-
-msgctxt "field:nodux_sale_payment.add_term_form,creditos:"
-msgid "Formas de Pago"
-msgstr "Formas de pago"
-
-msgctxt "field:nodux_sale_payment.add_term_form,dias:"
-msgid "Numero de dias"
-msgstr "Número de días"
-
-msgctxt "field:nodux_sale_payment.add_term_form,efectivo:"
-msgid "Efectivo"
-msgstr "Efectivo"
-
-msgctxt "field:nodux_sale_payment.add_term_form,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:nodux_sale_payment.add_term_form,nro:"
-msgid "Numero de cheque"
-msgstr "No. de cheque"
-
-msgctxt "field:nodux_sale_payment.add_term_form,pagos:"
-msgid "Numero de pagos"
-msgstr "Número de pagos"
-
-msgctxt "field:nodux_sale_payment.add_term_form,valor:"
-msgid "Total a pagar"
-msgstr "Total a pagar"
-
-msgctxt "field:nodux_sale_payment.add_term_form,verifica_dias:"
-msgid "Credito por dias"
-msgstr "Crédito por días"
-
-msgctxt "field:nodux_sale_payment.add_term_form,verifica_pagos:"
-msgid "Credito por pagos"
-msgstr "Crédito por pagos"
 
 msgctxt "field:sale.payment.form,amount:"
 msgid "Payment amount"
@@ -230,74 +137,6 @@ msgctxt "field:sale.sale,titular:"
 msgid "Titular de la cuenta"
 msgstr "Titular de la cuenta"
 
-msgctxt "field:sale_payment.payment,banco:"
-msgid "Banco"
-msgstr "Banco"
-
-msgctxt "field:sale_payment.payment,fecha:"
-msgid "Fecha de pago"
-msgstr "Fecha de pago"
-
-msgctxt "field:sale_payment.payment,financiar:"
-msgid "Total a financiar"
-msgstr "Total a financiar"
-
-msgctxt "field:sale_payment.payment,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:sale_payment.payment,monto:"
-msgid "Valor a pagar"
-msgstr "Valor a pagar"
-
-msgctxt "field:sale_payment.payment,numero_cuenta:"
-msgid "Numero de Cuenta"
-msgstr "Número de cuenta"
-
-msgctxt "field:sale_payment.payment,sale:"
-msgid "Sale"
-msgstr "Venta"
-
-msgctxt "field:sale_payment.payment,valor_nuevo:"
-msgid "Valor nuevo"
-msgstr "Valor nuevo"
-
-msgctxt "help:nodux_sale_payment.add_payment_term_form,dias:"
-msgid "Ingrese el numero de dias en los que se realizara el pago"
-msgstr "Ingrese el número de días en los que se realizará el pago"
-
-msgctxt "help:nodux_sale_payment.add_payment_term_form,dias_pagos:"
-msgid "Ingrese el numero de dias a considerar para realizar el pago"
-msgstr "Ingrese el némero de días a considerar para realizar el pago"
-
-msgctxt "help:nodux_sale_payment.add_payment_term_form,pagos:"
-msgid "Ingrese el numero de pagos en lo que realizara el pago total"
-msgstr "Ingrese el número de pagos en los que realizará el pago total"
-
-msgctxt "help:nodux_sale_payment.add_payment_term_form,verifica_dias:"
-msgid "Seleccione si desea realizar su pago en los dias siguientes"
-msgstr "Seleccione si desea realizar el pago en los días siguientes"
-
-msgctxt "help:nodux_sale_payment.add_payment_term_form,verifica_pagos:"
-msgid "Seleccione si desea realizar sus pagos mensuales"
-msgstr "Seleccione si desea realizar sus pagos mensuales"
-
-msgctxt "help:nodux_sale_payment.add_term_form,dias:"
-msgid "Ingrese el numero de dias en los que se realizara el pago"
-msgstr "Ingrese el número de días en los que se realizará el pago"
-
-msgctxt "help:nodux_sale_payment.add_term_form,pagos:"
-msgid "Ingrese el numero de pagos en lo que realizara el pago total"
-msgstr "Ingrese el número de pagos en los que realizará el pago total"
-
-msgctxt "help:nodux_sale_payment.add_term_form,verifica_dias:"
-msgid "Seleccione si desea realizar su pago en los dias siguientes"
-msgstr "Seleccione si desea realizar el pago en los días siguientes"
-
-msgctxt "help:nodux_sale_payment.add_term_form,verifica_pagos:"
-msgid "Seleccione si desea realizar sus pagos mensuales"
-msgstr "Seleccione si desea realizar sus pagos mensuales"
-
 msgctxt "help:sale.payment.form,recibido:"
 msgid "Ingrese el monto de dinero que reciba del cliente"
 msgstr "Ingrese el monto de dinero que reciba del cliente"
@@ -306,21 +145,153 @@ msgctxt "help:sale.sale,acumulativo:"
 msgid "Seleccione si realizara un plan acumulativo"
 msgstr "Marque si desea realizar un plan acumulativo"
 
-msgctxt "model:ir.action,name:wizard_add_term"
+msgctxt "model:ir.action,name:"
 msgid "Agregar Credito"
 msgstr "Agregar crédito"
 
-msgctxt "model:nodux_sale_payment.add_payment_term_form,name:"
-msgid "Add Term Form"
-msgstr "Agregar forma de pago"
+msgctxt "model:ir.action,name:report_invoice_pos"
+msgid "Invoice"
+msgstr "Factura"
 
-msgctxt "model:nodux_sale_payment.add_term_form,name:"
-msgid "Add Term Form"
-msgstr "Agregar forma de pago"
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "%"
+msgstr "%"
 
-msgctxt "model:sale_payment.payment,name:"
-msgid "Payment Term Line"
-msgstr "Línea del término de pago"
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "(sin imp.)"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "0"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "0.00"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "12"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid ":"
+msgstr ":"
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "C"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "C.I./RUC"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Cantidad"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Cliente"
+msgstr "CLIENTE"
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Cliente:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "DESCUENT"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "DESCUENTO"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Descripción"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Dirección:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "E-Mail:"
+msgstr "Correo electrónico:"
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Fecha:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Firma Autorizada"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Guía Remisión:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "IVA 12%"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Precio"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Precio Total"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Precio Unitario"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Precio con dcto."
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "RUC:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "SUBTOTAL"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "SUBTOTAL excento de IVA"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "SUBTOTAL no objeto de IVA"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Teléfono"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "VALOR TOTAL"
+msgstr "VALOR TOTAL"
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "_________"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "___________"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "______________"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "ntd."
+msgstr ""
 
 msgctxt "selection:account.statement,tipo_pago:"
 msgid ""
@@ -385,63 +356,7 @@ msgstr "MASTERCARD"
 msgctxt "selection:sale.sale,tipo_tarjeta:"
 msgid "VISA"
 msgstr "VISA"
-
-msgctxt "view:nodux_sale_payment.add_payment_term_form:"
-msgid "Credito"
-msgstr "Crédito"
-
-msgctxt "view:nodux_sale_payment.add_payment_term_form:"
-msgid "Forma de pago"
-msgstr "Forma de pago"
-
-msgctxt "view:nodux_sale_payment.add_payment_term_form:"
-msgid "Lineas de Pago"
-msgstr "Líneas de Pago"
-
-msgctxt "view:nodux_sale_payment.add_payment_term_form:"
-msgid "Monto de abono del cliente"
-msgstr "Importe de abono del cliente"
-
-msgctxt "view:nodux_sale_payment.add_payment_term_form:"
-msgid "Total a pagar de la factura"
-msgstr "Total a pagar de la factura"
-
-msgctxt "view:nodux_sale_payment.add_term_form:"
-msgid "Credito"
-msgstr "Crédito"
-
-msgctxt "view:nodux_sale_payment.add_term_form:"
-msgid "Forma de pago"
-msgstr "Forma de pago"
-
-msgctxt "view:nodux_sale_payment.add_term_form:"
-msgid "Lineas de Pago"
-msgstr "Líneas de Pago"
-
-msgctxt "view:nodux_sale_payment.add_term_form:"
-msgid "Monto de abono del cliente"
-msgstr "Importe de abono del cliente"
-
-msgctxt "view:nodux_sale_payment.add_term_form:"
-msgid "Total a pagar de la factura"
-msgstr "Total a pagar de la factura"
 
 msgctxt "view:sale.sale:"
 msgid "Agregar Credito"
 msgstr "Agregar crédito"
-
-msgctxt "view:sale_payment.payment:"
-msgid "Formas de pago"
-msgstr "Formas de pago"
-
-msgctxt "wizard_button:nodux_sale_payment.add_term,start,add_:"
-msgid "Add"
-msgstr "Agregar"
-
-msgctxt "wizard_button:nodux_sale_payment.add_term,start,end:"
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgctxt "wizard_button:nodux_sale_payment.add_term,start,print_:"
-msgid "Imprimir Credito"
-msgstr "Imprimir crédito"
