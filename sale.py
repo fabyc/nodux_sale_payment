@@ -280,12 +280,22 @@ class SalePaymentForm():
     @fields.depends('journal')
     def on_change_journal(self):
         if self.journal:
+            result = {}
             pool = Pool()
             Statement=pool.get('account.statement')
             statement = Statement.search([('journal', '=', self.journal.id)])
-            for s in statement:
-                result = {}
-                result['tipo_p'] = s.tipo_pago
+            
+            if statement:
+                for s in statement:
+                    result['tipo_p'] = s.tipo_pago
+                    tipo_p = s.tipo_pago
+                if tipo_p :
+                    pass
+                else:
+                    self.raise_user_error('No ha configurado el tipo de pago. \n-Seleccione el estado de cuenta en "Todos los estados de cuenta" \n-Seleccione forma de pago.')
+            else: 
+                 self.raise_user_error('No ha creado el estado de cuenta para %s ', sale_device.name)
+             
         return result
             
     @staticmethod
