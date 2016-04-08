@@ -269,11 +269,12 @@ class SalePaymentForm():
      
     @fields.depends('payment_amount', 'recibido')
     def on_change_recibido(self):
+        result = {}
+        cambio = Decimal(0.0)
         if self.recibido and self.payment_amount:
             cambio = Decimal(0.0)
             cambio = (self.recibido) - (self.payment_amount)
-            result = {}
-            result['cambio_cliente'] = cambio
+        result['cambio_cliente'] = cambio
         return result
             
     @fields.depends('journal')
@@ -301,7 +302,7 @@ class WizardSalePayment(Wizard):
     def __setup__(cls):
         super(WizardSalePayment, cls).__setup__()
         cls._error_messages.update({
-                'not_tipo_p': ('No ha configurado el tipo de pago. Dirijase a: \n->Todos los estados de cuenta (Seleeccione el estado de cuenta) \n->Forma de pago.'),
+                'not_tipo_p': ('No ha configurado el tipo de pago. \n-Seleccione el estado de cuenta en "Todos los estados de cuenta" \n-Seleccione forma de pago.'),
                 })
 
     def default_start(self, fields):
@@ -318,8 +319,19 @@ class WizardSalePayment(Wizard):
         if sale_device.journal:
             statement = Statement.search([('journal', '=', sale_device.journal.id)])
         else:
-            self.raise_user_error('No se ha creado un estado de cuenta para %s', (sale_device.name))
+            self.raise_user_error('No se ha definido un libro diario por defecto para', (sale_device.name))
             
+        if statement :
+            for s in statement:
+                tipo_p = s.tipo_pago
+            if tipo_p :
+                pass
+            else:
+                self.raise_user_error('not_tipo_p')
+        else: 
+             self.raise_user_error('No ha creado un estado de cuenta para %s ', sale_device.name)
+             
+        
         if not sale.check_enough_stock():
             return
 
@@ -351,13 +363,7 @@ class WizardSalePayment(Wizard):
                     # update quantities
                     quantities[line.product.id] = qty - line.quantity
     
-        for s in statement:
-            tipo_p = s.tipo_pago
-        if tipo_p :
-            pass
-        else:
-            self.raise_user_error('not_tipo_p')
-            
+             
         if user.id != 0 and not sale_device:
             self.raise_user_error('not_sale_device')
         term_lines = sale.payment_term.compute(sale.total_amount, sale.company.currency,
@@ -511,6 +517,7 @@ class InvoiceReportPos(Report):
         else:
             invoice_e = 'false'
             invoice = sale
+
         user = User(Transaction().user)
         localcontext['company'] = user.company
         localcontext['invoice'] = invoice
