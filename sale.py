@@ -294,7 +294,7 @@ class SalePaymentForm():
                 else:
                     self.raise_user_error('No ha configurado el tipo de pago. \n-Seleccione el estado de cuenta en "Todos los estados de cuenta" \n-Seleccione forma de pago.')
             else: 
-                 self.raise_user_error('No ha creado el estado de cuenta para %s ', sale_device.name)
+                 self.raise_user_error('No ha creado el estado de cuenta para el punto de venta')
              
         return result
             
