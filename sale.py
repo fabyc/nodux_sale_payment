@@ -17,7 +17,7 @@ from trytond.report import Report
 from trytond.transaction import Transaction
 import os
 
-__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos']
+__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos', 'ReturnSale']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
@@ -55,7 +55,7 @@ class Sale():
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
-    fecha_deposito = fields.Date('Fecha deposito', states={
+    fecha_deposito = fields.Date('Fecha de cheque', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
@@ -326,6 +326,23 @@ class WizardSalePayment(Wizard):
         Date = pool.get('ir.date')
         Statement=pool.get('account.statement')
         
+        ModelData = pool.get('ir.model.data')
+        User = pool.get('res.user')
+        Group = pool.get('res.group')
+        origin = str(sale)
+        def in_group():
+            
+            group = Group(ModelData.get_id('nodux_sale_payment',
+                    'group_stock_force'))
+            transaction = Transaction()
+            user_id = transaction.user
+            if user_id == 0:
+                user_id = transaction.context.get('user', user_id)
+            if user_id == 0:
+                return True
+            user = User(user_id)
+            return origin and group in user.groups
+            
         if sale_device.journal:
             statement = Statement.search([('journal', '=', sale_device.journal.id)])
         else:
@@ -344,7 +361,7 @@ class WizardSalePayment(Wizard):
         
         if not sale.check_enough_stock():
             return
-
+        
         Product = Pool().get('product.product')
         if sale.lines:
             # get all products
@@ -367,19 +384,26 @@ class WizardSalePayment(Wizard):
                 if line.product and line.product.id in quantities:
                     qty = quantities[line.product.id]
                 if qty < line.quantity:
+                    if not in_group():
+                        self.raise_user_error('No hay suficiente stock del producto: \n %s \n en la bodega %s', (line.product.name, sale.warehouse.name))
+            
                     line.raise_user_warning('not_enough_stock_%s' % line.id,
                            'No hay suficiente stock del producto: "%s"'
                         'en la bodega "%s", para realizar esta venta.', (line.product.name, sale.warehouse.name))
                     # update quantities
                     quantities[line.product.id] = qty - line.quantity
     
-             
         if user.id != 0 and not sale_device:
             self.raise_user_error('not_sale_device')
         term_lines = sale.payment_term.compute(sale.total_amount, sale.company.currency,
             sale.sale_date)
         if not term_lines:
             term_lines = [(Date.today(), total)]
+        
+        if sale.paid_amount:
+            payment_amount = sale.total_amount - sale.paid_amount  
+        else: 
+            payment_amount = sale.total_amount
         
         for date, amount in term_lines:
             if date == Date.today():
@@ -432,6 +456,7 @@ class WizardSalePayment(Wizard):
 
         active_id = Transaction().context.get('active_id', False)
         sale = Sale(active_id)
+        
         if form.tipo_p == 'cheque':
             sale.tipo_p = form.tipo_p
             sale.banco = form.banco
@@ -529,6 +554,7 @@ class InvoiceReportPos(Report):
             invoice = sale
 
         user = User(Transaction().user)
+        localcontext['user'] = user
         localcontext['company'] = user.company
         localcontext['invoice'] = invoice
         localcontext['invoice_e'] = invoice_e
@@ -576,3 +602,61 @@ class InvoiceReportPos(Report):
                         subtotal0= subtotal0 + (line.amount)
         return subtotal0
 
+class ReturnSale(Wizard):
+    'Return Sale'
+    __name__ = 'sale.return_sale'
+
+    start = StateView('sale.return_sale.start',
+        'sale.return_sale_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Return', 'return_', 'tryton-ok', default=True),
+            Button('Reversar factura', 'reverse_', 'tryton-ok'),
+            ])
+    return_ = StateAction('sale.act_sale_form')
+    reverse_ = StateAction('sale.act_sale_form')
+    def do_return_(self, action):
+        Sale = Pool().get('sale.sale')
+        
+        sales = Sale.browse(Transaction().context['active_ids'])
+        
+        origin = str(sales)
+        def in_group():
+            pool = Pool()
+            ModelData = pool.get('ir.model.data')
+            User = pool.get('res.user')
+            Group = pool.get('res.group')
+            group = Group(ModelData.get_id('nodux_account_ec_pymes',
+                        'group_sale_return'))
+            transaction = Transaction()
+            user_id = transaction.user
+            if user_id == 0:
+                user_id = transaction.context.get('user', user_id)
+            if user_id == 0:
+                return True
+            user = User(user_id)
+            return origin and group in user.groups
+        if not in_group():
+            self.raise_user_error("No esta autorizado a realizar una devolucion")
+
+        return_sales = Sale.copy(sales)
+        for sale in return_sales:
+            for line in sale.lines:
+                if line.type == 'line':
+                    line.quantity *= -1
+                    line.save()
+        data = {'res_id': [s.id for s in return_sales]}
+        if len(return_sales) == 1:
+            action['views'].reverse()
+        return action, data
+        
+    def do_reverse_(self, action):
+        Sale = Pool().get('sale.sale')
+        sales = Sale.browse(Transaction().context['active_ids'])
+        for sale in sales:
+            print "Lo que tiene la venta ", sale.payments, sale.lines, sale.moves, sale.invoices, sale.shipments
+            if sale.invoices:
+                for s in sale.invoices:
+                    if s.state == 'posted':
+                        s.state = 'draft'
+                        s.save()
+            sale.cancel(sales)
