@@ -543,8 +543,9 @@ class InvoiceReportPos(Report):
         Invoice = pool.get('account.invoice')
         Sale = pool.get('sale.sale')
         sale = records[0]
-        
+        TermLines = pool.get('account.invoice.payment_term.line')
         invoices = Invoice.search([('description', '=', sale.description)])
+        cont = 0
         if invoices:
             for i in invoices:
                 invoice = i
@@ -552,7 +553,21 @@ class InvoiceReportPos(Report):
         else:
             invoice_e = 'false'
             invoice = sale
-
+        
+        if sale.tipo_p:
+            tipo = sale.tipo_p
+        else:
+            tipo = None
+        if sale.payment_term:
+            term = sale.payment_term
+            termlines = TermLines.search([('payment', '=', term.id), ('days', '=', 0)])
+            for t in termlines:
+                cont += 1
+        if cont == 1:
+            forma = 'CONTADO'
+        else:
+            forma = 'CREDITO'
+              
         user = User(Transaction().user)
         localcontext['user'] = user
         localcontext['company'] = user.company
@@ -561,6 +576,8 @@ class InvoiceReportPos(Report):
         localcontext['subtotal0'] = cls._get_subtotal_0(Sale, sale)
         localcontext['subtotal12'] = cls._get_subtotal_12(Sale, sale)
         localcontext['descuento'] = cls._get_descuento(Sale, sale)
+        localcontext['forma'] = forma
+        localcontext['tipo'] = tipo
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)   
