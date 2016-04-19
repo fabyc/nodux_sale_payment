@@ -578,8 +578,9 @@ class InvoiceReportPos(Report):
         Sale = pool.get('sale.sale')
         sale = records[0]
         TermLines = pool.get('account.invoice.payment_term.line')
-        invoices = Invoice.search([('description', '=', sale.description)])
+        invoices = Invoice.search([('description', '=', sale.reference), ('reference', '!=', None)])
         cont = 0
+        
         if invoices:
             for i in invoices:
                 invoice = i
