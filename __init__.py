@@ -6,6 +6,7 @@ from .sale import *
 from .statement import *
 def register():
     Pool.register(
+        Card,
         SalePaymentForm,
         Statement,
         Sale,

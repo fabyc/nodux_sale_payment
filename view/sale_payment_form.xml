@@ -24,8 +24,8 @@ copyright notices and license terms. -->
         <field name="numero_tarjeta"/>
         <label name="lote"/>
         <field name="lote"/>
-        <label name="tipo_tarjeta"/>
-        <field name="tipo_tarjeta"/>
+        <label name="tarjeta"/>
+        <field name="tarjeta"/>
         <newline/>
         <label name="banco_deposito"/>
         <field name="banco_deposito"/>

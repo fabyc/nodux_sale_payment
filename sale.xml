@@ -23,7 +23,7 @@ copyright notices and license terms. -->
             <field name="model">sale.sale</field>
             <field name="report_name">nodux_sale_payment.invoice_pos</field>
             <field name="report">nodux_sale_payment/invoice.odt</field>
-            <field name="style">nodux_account_ec_pymes/header_A4.odt</field>
+            <field name="style">nodux_sale_payment/header_A4.odt</field>
         </record>
         <record model="ir.action.keyword" id="report_invoice_pos_keyword">
             <field name="keyword">form_print</field>
@@ -44,6 +44,36 @@ copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_stock_force"/>
         </record>
+        
+        
+        <record model="ir.ui.view" id="card_view_tree">
+            <field name="model">sale.card</field>
+            <field name="type">tree</field>
+            <field name="name">card_tree</field>
+        </record>
+
+        <record model="ir.ui.view" id="card_view_form">
+            <field name="model">sale.card</field>
+            <field name="type">form</field>
+            <field name="name">card_form</field>
+        </record>
+        
+        <record model="ir.action.act_window" id="act_card_form">
+            <field name="name">Tarjetas de Credito</field>
+            <field name="res_model">sale.card</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_card_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="card_view_tree"/>
+            <field name="act_window" ref="act_card_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_card_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="card_view_form"/>
+            <field name="act_window" ref="act_card_form"/>
+        </record>
+        <menuitem parent="account.menu_account_configuration" action="act_card_form"
+            id="menu_card_form"/>
         
     </data>
 </tryton>

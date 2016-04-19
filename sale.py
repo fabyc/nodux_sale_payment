@@ -17,7 +17,8 @@ from trytond.report import Report
 from trytond.transaction import Transaction
 import os
 
-__all__ = ['SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos', 'ReturnSale']
+
+__all__ = ['Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos', 'ReturnSale']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
@@ -31,6 +32,31 @@ tipoPago = {
     'cheque': 'Cheque',
 }
 
+class Card(ModelSQL, ModelView):
+    'card'
+    __name__ = 'sale.card'
+    name = fields.Char('Tarjeta de credito', required=True)
+    banco =  fields.Many2One('bank', 'Banco', states={
+                'readonly': ~Eval('active', True),
+                })
+    
+    @classmethod
+    def __setup__(cls):
+        super(Card, cls).__setup__()
+        
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('banco',) + tuple(clause[1:]),
+            (cls._rec_name,) + tuple(clause[1:]),
+            ]
+            
+    def get_rec_name(self, name):
+        if self.banco:
+            return self.banco.party.name + ' - ' + self.name
+        else:
+            return self.name
+            
 class Sale():
     __name__ = 'sale.sale'
     acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo",  states={
@@ -76,14 +102,10 @@ class Sale():
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'tarjeta',
                 })
-    tipo_tarjeta = fields.Selection([
-            ('',''),
-            ('visa','VISA'),
-            ('mastercard','MASTERCARD'),
-            ],'Tipo de Tarjeta.', states={
+    tarjeta = fields.Many2One('sale.card', 'Tarjeta', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'tarjeta',
-            })
+                })
     #forma de pago -> banco_deposito numero_cuenta_deposito fecha_deposito numero_deposito
     banco_deposito =  fields.Many2One('bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
@@ -120,7 +142,7 @@ class Sale():
                 res['acumulativo'] = False
                 return res
         return res
-        
+    
     @classmethod
     @ModelView.button
     def process(cls, sales):
@@ -237,14 +259,10 @@ class SalePaymentForm():
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'tarjeta',
                 })
-    tipo_tarjeta = fields.Selection([
-            ('',''),
-            ('visa','VISA'),
-            ('mastercard','MASTERCARD'),
-            ],'Tipo de Tarjeta.', states={
+    tarjeta = fields.Many2One('sale.card', 'Tarjeta', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'tarjeta',
-            })
+                })
     #forma de pago -> banco_deposito numero_cuenta_deposito fecha_deposito numero_deposito
     banco_deposito =  fields.Many2One('bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
@@ -472,16 +490,20 @@ class WizardSalePayment(Wizard):
             sale.numero_cuenta_deposito = form.numero_cuenta_deposito
             sale.fecha_deposito = form.fecha_deposito
             sale.numero_deposito= form.numero_deposito
-         
+            sale.save()
+            
         if form.tipo_p == 'tarjeta':
             sale.tipo_p = form.tipo_p
             sale.numero_tarjeta = form.numero_tarjeta
             sale.lote = form.lote
-            sale.tipo_tarjeta = form.tipo_tarjeta
-        
+            sale.tarjeta = form.tarjeta
+            sale.save()
+            
         if form.tipo_p == 'efectivo':
+            sale.tipo_p = form.tipo_p
             sale.recibido = form.recibido
             sale.cambio = form.cambio_cliente
+            sale.save()
             
         if not sale.reference:
             Sale.set_reference([sale])
@@ -535,7 +557,6 @@ class WizardSalePayment(Wizard):
 class InvoiceReportPos(Report):
     __name__ = 'nodux_sale_payment.invoice_pos'
     
-    
     @classmethod
     def parse(cls, report, records, data, localcontext):
         pool = Pool()
@@ -555,26 +576,31 @@ class InvoiceReportPos(Report):
             invoice = sale
         
         if sale.tipo_p:
-            tipo = sale.tipo_p
+            tipo = (sale.tipo_p).upper()
         else:
             tipo = None
         if sale.payment_term:
             term = sale.payment_term
-            termlines = TermLines.search([('payment', '=', term.id), ('days', '=', 0)])
+            termlines = TermLines.search([('payment', '=', term.id)])
             for t in termlines:
+                t_f = t
                 cont += 1
-        if cont == 1:
+                
+        if cont == 1 and t_f.days == 0:
             forma = 'CONTADO'
         else:
             forma = 'CREDITO'
-              
+        
+        if sale.total_amount:
+            d = str(sale.total_amount)
+            decimales = d[-2:]
         user = User(Transaction().user)
         localcontext['user'] = user
         localcontext['company'] = user.company
         localcontext['invoice'] = invoice
         localcontext['invoice_e'] = invoice_e
-        localcontext['subtotal0'] = cls._get_subtotal_0(Sale, sale)
-        localcontext['subtotal12'] = cls._get_subtotal_12(Sale, sale)
+        localcontext['subtotal_0'] = cls._get_subtotal_0(Sale, sale)
+        localcontext['subtotal_12'] = cls._get_subtotal_12(Sale, sale)
         localcontext['descuento'] = cls._get_descuento(Sale, sale)
         localcontext['forma'] = forma
         localcontext['tipo'] = tipo
