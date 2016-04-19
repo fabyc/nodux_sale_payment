@@ -17,6 +17,13 @@ from trytond.report import Report
 from trytond.transaction import Transaction
 import os
 
+conversor = None
+try:
+    from numword import numword_es
+    conversor = numword_es.NumWordES()
+except:
+    print("Warning: Does not possible import numword module!")
+    print("Please install it...!")
 
 __all__ = ['Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos', 'ReturnSale']
 __metaclass__ = PoolMeta
@@ -143,6 +150,12 @@ class Sale():
                 return res
         return res
     
+    def get_amount2words(self, value):
+        if conversor:
+            return (conversor.cardinal(int(value))).upper()
+        else:
+            return ''
+                   
     @classmethod
     @ModelView.button
     def process(cls, sales):
@@ -604,10 +617,19 @@ class InvoiceReportPos(Report):
         localcontext['descuento'] = cls._get_descuento(Sale, sale)
         localcontext['forma'] = forma
         localcontext['tipo'] = tipo
+        localcontext['amount2words']=cls._get_amount_to_pay_words(Sale, sale)
+        localcontext['decimales'] = decimales
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)   
                 
+    @classmethod
+    def _get_amount_to_pay_words(cls, Sale, sale):
+        amount_to_pay_words = Decimal(0.0)
+        if sale.total_amount and conversor:
+            amount_to_pay_words = sale.get_amount2words(sale.total_amount)
+        return amount_to_pay_words
+        
     @classmethod
     def _get_descuento(cls, Sale, sale):
         descuento = Decimal(0.00)
