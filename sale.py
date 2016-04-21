@@ -377,7 +377,7 @@ class WizardSalePayment(Wizard):
         if sale_device.journal:
             statement = Statement.search([('journal', '=', sale_device.journal.id)])
         else:
-            self.raise_user_error('No se ha definido un libro diario por defecto para', (sale_device.name))
+            self.raise_user_error('No se ha definido un libro diario por defecto para %s', (sale_device.name))
             
         if statement :
             for s in statement:
