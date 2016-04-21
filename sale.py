@@ -377,7 +377,7 @@ class WizardSalePayment(Wizard):
         if sale_device.journal:
             statement = Statement.search([('journal', '=', sale_device.journal.id)])
         else:
-            self.raise_user_error('No se ha definido un libro diario por defecto para %s', (sale_device.name))
+            self.raise_user_error('No se ha definido un libro diario por defecto para %s', sale_device.name)
             
         if statement :
             for s in statement:
@@ -578,7 +578,7 @@ class InvoiceReportPos(Report):
         Sale = pool.get('sale.sale')
         sale = records[0]
         TermLines = pool.get('account.invoice.payment_term.line')
-        invoices = Invoice.search([('description', '=', sale.reference), ('reference', '!=', None)])
+        invoices = Invoice.search([('description', '=', sale.reference), ('description', '!=', None)])
         cont = 0
         
         if invoices:
@@ -608,6 +608,7 @@ class InvoiceReportPos(Report):
         if sale.total_amount:
             d = str(sale.total_amount)
             decimales = d[-2:]
+         
         user = User(Transaction().user)
         localcontext['user'] = user
         localcontext['company'] = user.company
