@@ -185,7 +185,7 @@ class Sale():
         Date = pool.get('ir.date')
         for sale in sales:
             if sale.state == 'draft':
-                cls.process([sale])
+                cls.quote([sale])
             if sale.state == 'quotation':
                 cls.confirm([sale])
             if sale.state == 'confirmed':
@@ -336,7 +336,7 @@ class SalePaymentForm():
 class WizardSalePayment(Wizard):
     'Wizard Sale Payment'
     __name__ = 'sale.payment'  
-    
+    pay_ = StateTransition()
     print_ = StateAction('nodux_sale_payment.report_invoice_pos')
     
     @classmethod
@@ -462,15 +462,7 @@ class WizardSalePayment(Wizard):
             'party': sale.party.id,
             'tipo_p':tipo_p,
             }     
-        """
-        if sale_device:
-            default = {}
-            default['journal'] = sale_device.journal.id if sale_device.journal else None,
-            default['payment_amount'] = sale.total_amount - sale.paid_amount if sale.paid_amount else sale.total_amount
-            default['currency_digits']= sale.currency_digits
-            default['party']= sale.party.id
-            return default
-        """    
+
     def transition_pay_(self):
         pool = Pool()
         Date = pool.get('ir.date')
@@ -525,7 +517,7 @@ class WizardSalePayment(Wizard):
             and sale.party.account_receivable.id
             or self.raise_user_error('party_without_account_receivable',
                 error_args=(sale.party.name,)))
-
+        
         if form.payment_amount:
             payment = StatementLine(
                 statement=statements[0].id,
@@ -537,13 +529,14 @@ class WizardSalePayment(Wizard):
                 sale=active_id
                 )
             payment.save()
+            
         if sale.acumulativo != True:
             sale.description = sale.reference
             sale.save()
             Sale.workflow_to_end([sale])
             Invoice = Pool().get('account.invoice')
             invoices = Invoice.search([('description', '=', sale.description)])
-
+            
             if sale.total_amount == sale.paid_amount:
                 return 'print_'
                 return 'end'
@@ -720,7 +713,6 @@ class ReturnSale(Wizard):
         Sale = Pool().get('sale.sale')
         sales = Sale.browse(Transaction().context['active_ids'])
         for sale in sales:
-            print "Lo que tiene la venta ", sale.payments, sale.lines, sale.moves, sale.invoices, sale.shipments
             if sale.invoices:
                 for s in sale.invoices:
                     if s.state == 'posted':
