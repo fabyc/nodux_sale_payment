@@ -60,7 +60,7 @@ class Card(ModelSQL, ModelView):
             
     def get_rec_name(self, name):
         if self.banco:
-            return self.banco.party.name + ' - ' + self.name
+            return self.name + ' - ' + self.banco.party.name
         else:
             return self.name
             
@@ -336,7 +336,6 @@ class SalePaymentForm():
 class WizardSalePayment(Wizard):
     'Wizard Sale Payment'
     __name__ = 'sale.payment'  
-    pay_ = StateTransition()
     print_ = StateAction('nodux_sale_payment.report_invoice_pos')
     
     @classmethod
@@ -412,17 +411,20 @@ class WizardSalePayment(Wizard):
             
             # check enough stock
             for line in sale.lines:
-                if line.product and line.product.id in quantities:
-                    qty = quantities[line.product.id]
-                if qty < line.quantity:
-                    if not in_group():
-                        self.raise_user_error('No hay suficiente stock del producto: \n %s \n en la bodega %s', (line.product.name, sale.warehouse.name))
-            
-                    line.raise_user_warning('not_enough_stock_%s' % line.id,
-                           'No hay suficiente stock del producto: "%s"'
-                        'en la bodega "%s", para realizar esta venta.', (line.product.name, sale.warehouse.name))
-                    # update quantities
-                    quantities[line.product.id] = qty - line.quantity
+                if line.product.type not in PRODUCT_TYPES:
+                    continue
+                else:
+                    if line.product and line.product.id in quantities:
+                        qty = quantities[line.product.id]
+                    if qty < line.quantity:
+                        if not in_group():
+                            self.raise_user_error('No hay suficiente stock del producto: \n %s \n en la bodega %s', (line.product.name, sale.warehouse.name))
+                
+                        line.raise_user_warning('not_enough_stock_%s' % line.id,
+                               'No hay suficiente stock del producto: "%s"'
+                            'en la bodega "%s", para realizar esta venta.', (line.product.name, sale.warehouse.name))
+                        # update quantities
+                        quantities[line.product.id] = qty - line.quantity
     
         if user.id != 0 and not sale_device:
             self.raise_user_error('not_sale_device')
@@ -573,7 +575,6 @@ class InvoiceReportPos(Report):
         TermLines = pool.get('account.invoice.payment_term.line')
         invoices = Invoice.search([('description', '=', sale.reference), ('description', '!=', None)])
         cont = 0
-        
         if invoices:
             for i in invoices:
                 invoice = i
@@ -581,7 +582,7 @@ class InvoiceReportPos(Report):
         else:
             invoice_e = 'false'
             invoice = sale
-        
+
         if sale.tipo_p:
             tipo = (sale.tipo_p).upper()
         else:
@@ -614,6 +615,7 @@ class InvoiceReportPos(Report):
         localcontext['tipo'] = tipo
         localcontext['amount2words']=cls._get_amount_to_pay_words(Sale, sale)
         localcontext['decimales'] = decimales
+        localcontext['lineas'] = cls._get_lineas(Sale, sale)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)   
@@ -624,6 +626,14 @@ class InvoiceReportPos(Report):
         if sale.total_amount and conversor:
             amount_to_pay_words = sale.get_amount2words(sale.total_amount)
         return amount_to_pay_words
+        
+    @classmethod
+    def _get_lineas(cls, Sale, sale):
+        cont = 0
+                
+        for line in sale.lines:
+            cont += 1
+        return cont
         
     @classmethod
     def _get_descuento(cls, Sale, sale):
