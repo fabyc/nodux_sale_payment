@@ -440,8 +440,10 @@ class WizardSalePayment(Wizard):
         
         for date, amount in term_lines:
             if date == Date.today():
+                if amount < 0 :
+                    amount *=-1 
                 payment_amount = amount
-        
+                
         if sale.paid_amount:
             amount = sale.total_amount - sale.paid_amount  
         else: 
