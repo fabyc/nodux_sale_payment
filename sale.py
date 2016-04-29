@@ -612,6 +612,8 @@ class InvoiceReportPos(Report):
         if sale.total_amount:
             d = str(sale.total_amount)
             decimales = d[-2:]
+        else:
+            decimales='0.0'
             
         user = User(Transaction().user)
         localcontext['user'] = user
