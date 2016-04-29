@@ -428,8 +428,10 @@ class WizardSalePayment(Wizard):
     
         if user.id != 0 and not sale_device:
             self.raise_user_error('not_sale_device')
+            
         term_lines = sale.payment_term.compute(sale.total_amount, sale.company.currency,
             sale.sale_date)
+            
         if not term_lines:
             term_lines = [(Date.today(), total)]
         
@@ -437,13 +439,13 @@ class WizardSalePayment(Wizard):
             payment_amount = sale.total_amount - sale.paid_amount  
         else: 
             payment_amount = sale.total_amount
-        
+            
         for date, amount in term_lines:
             if date == Date.today():
                 if amount < 0 :
                     amount *=-1 
                 payment_amount = amount
-                
+               
         if sale.paid_amount:
             amount = sale.total_amount - sale.paid_amount  
         else: 
@@ -456,7 +458,7 @@ class WizardSalePayment(Wizard):
 
         else:
             to_pay= amount
-       
+        
         return {
             'journal': sale_device.journal.id
                 if sale_device.journal else None,
@@ -483,6 +485,8 @@ class WizardSalePayment(Wizard):
 
         active_id = Transaction().context.get('active_id', False)
         sale = Sale(active_id)
+        date = Pool().get('ir.date')
+        date = date.today()
         
         if form.tipo_p == 'cheque':
             sale.tipo_p = form.tipo_p
@@ -491,6 +495,7 @@ class WizardSalePayment(Wizard):
             sale.fecha_deposito= form.fecha_deposito
             sale.titular = form.titular
             sale.numero_cheque = form.numero_cheque
+            sale.sale_date = date
             sale.save()
             
         if form.tipo_p == 'deposito':
@@ -499,6 +504,7 @@ class WizardSalePayment(Wizard):
             sale.numero_cuenta_deposito = form.numero_cuenta_deposito
             sale.fecha_deposito = form.fecha_deposito
             sale.numero_deposito= form.numero_deposito
+            sale.sale_date = date
             sale.save()
             
         if form.tipo_p == 'tarjeta':
@@ -506,12 +512,14 @@ class WizardSalePayment(Wizard):
             sale.numero_tarjeta = form.numero_tarjeta
             sale.lote = form.lote
             sale.tarjeta = form.tarjeta
+            sale.sale_date = date
             sale.save()
             
         if form.tipo_p == 'efectivo':
             sale.tipo_p = form.tipo_p
             sale.recibido = form.recibido
             sale.cambio = form.cambio_cliente
+            sale.sale_date = date
             sale.save()
             
         if not sale.reference:
@@ -604,7 +612,7 @@ class InvoiceReportPos(Report):
         if sale.total_amount:
             d = str(sale.total_amount)
             decimales = d[-2:]
-         
+            
         user = User(Transaction().user)
         localcontext['user'] = user
         localcontext['company'] = user.company
