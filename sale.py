@@ -374,7 +374,7 @@ class WizardSalePayment(Wizard):
             return origin and group in user.groups
             
         if sale_device.journal:
-            statement = Statement.search([('journal', '=', sale_device.journal.id)])
+            statement = Statement.search([('journal', '=', sale_device.journal.id), ('state', '=', 'draft')], order=[('date', 'DESC')])
         else:
             self.raise_user_error('No se ha definido un libro diario por defecto para %s', sale_device.name)
             
