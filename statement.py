@@ -21,3 +21,25 @@ class Statement:
             ('deposito','Deposito'),
             ('cheque','Cheque'),
             ],'Forma de Pago')
+            
+    @classmethod
+    def __setup__(cls):
+        super(Statement, cls).__setup__()
+        
+    @fields.depends('name', 'tipo_pago')
+    def on_change_name(self):
+        result = {}
+        tipo_pago = ""
+        if self.name:
+            name = self.name.lower()
+            if 'efectivo' in name:
+                tipo_pago = 'efectivo'
+            if 'tarjeta' in name:
+                tipo_pago = 'tarjeta'
+            if 'deposito' in name:
+                tipo_pago = 'deposito'
+            if 'cheque' in name:
+                tipo_pago = 'cheque'
+            
+        result['tipo_pago'] = tipo_pago
+        return result
