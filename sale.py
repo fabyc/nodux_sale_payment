@@ -251,7 +251,7 @@ class SalePaymentForm():
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
-    fecha_deposito_cheque = fields.Date('Fecha de Deposito', states={
+    fecha_deposito_cheque = fields.Date('Fecha de Cheque', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
@@ -308,7 +308,7 @@ class SalePaymentForm():
         result['cambio_cliente'] = cambio
         return result
             
-    @fields.depends('journal')
+    @fields.depends('journal', 'party')
     def on_change_journal(self):
         if self.journal:
             result = {}
@@ -326,7 +326,9 @@ class SalePaymentForm():
                     self.raise_user_error('No ha configurado el tipo de pago. \n-Seleccione el estado de cuenta en "Todos los estados de cuenta" \n-Seleccione forma de pago.')
             else: 
                  self.raise_user_error('No ha creado el estado de cuenta para el punto de venta')
-             
+            if tipo_p == 'cheque':
+                titular = self.party.name
+                result['titular'] = titular
         return result
             
     @staticmethod
