@@ -167,7 +167,7 @@ class Sale():
         amount = Decimal(0.0)
         id_i = None
         result = {n: {s.id: Decimal(0) for s in sales} for n in names}
-        invoice = ""
+        
         for name in names:
             for sale in sales:
                 amount_unreconciled = Decimal(0.0)
@@ -176,12 +176,11 @@ class Sale():
                 if invoices:
                     for i in invoices:
                         invoice = i.number
-                move_lines = MoveLine.search([
-                        ('description', '=', invoice),
-                    ])
-                for line in move_lines:
-                    amount += line.credit
-                
+                    move_lines = MoveLine.search([
+                            ('description', '=', invoice),
+                        ])
+                    for line in move_lines:
+                        amount += line.credit
                 if sale.payments:
                     for payment in sale.payments:
                         amount += payment.amount
@@ -203,21 +202,21 @@ class Sale():
         amount = Decimal(0.0)
         original = Decimal(0.0)
         id_i = None
-        invoice = ""
         result = {n: {s.id: Decimal(0) for s in sales} for n in names}
         for name in names:
             for sale in sales:
                 amount_unreconciled = Decimal(0.0)
                 amount = Decimal(0.0)
-                invoices = Invoice.search([('description','=', sale.reference), ('description', '!=', None)])
+                invoices = Invoice.search([('description','=', sale.reference), ('description', '!=', None), ('description', '!=', '')])
                 if invoices:
                     for i in invoices:
                         invoice = i.number
-                move_lines = MoveLine.search([
-                        ('description', '=', invoice),
-                    ])
-                for line in move_lines:
-                    amount += line.credit
+                    move_lines = MoveLine.search([
+                            ('description', '=', invoice),
+                        ])
+                    for line in move_lines:
+                        amount += line.credit
+                    
                 if sale.total_amount:
                     original = sale.total_amount
                     
@@ -703,6 +702,7 @@ class InvoiceReportPos(Report):
         localcontext['invoice_e'] = invoice_e
         localcontext['subtotal_0'] = cls._get_subtotal_0(Sale, sale)
         localcontext['subtotal_12'] = cls._get_subtotal_12(Sale, sale)
+        localcontext['subtotal_14'] = cls._get_subtotal_14(Sale, sale)
         localcontext['descuento'] = cls._get_descuento(Sale, sale)
         localcontext['forma'] = forma
         localcontext['tipo'] = tipo
@@ -741,6 +741,19 @@ class InvoiceReportPos(Report):
                 descuento = Decimal(0.00)
         return descuento
 
+    
+    @classmethod
+    def _get_subtotal_14(cls, Sale, sale):
+        subtotal14 = Decimal(0.00)
+        pool = Pool()
+        
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '14':
+                        subtotal14= subtotal14 + (line.amount)
+        return subtotal14
+        
     @classmethod
     def _get_subtotal_12(cls, Sale, sale):
         subtotal12 = Decimal(0.00)
@@ -773,7 +786,7 @@ class ReturnSale(Wizard):
         'sale.return_sale_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Return', 'return_', 'tryton-ok', default=True),
-            Button('Reversar factura', 'reverse_', 'tryton-ok'),
+            #Button('Reversar factura', 'reverse_', 'tryton-ok'),
             ])
     return_ = StateAction('sale.act_sale_form')
     reverse_ = StateAction('sale.act_sale_form')

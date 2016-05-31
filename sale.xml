@@ -17,7 +17,7 @@ copyright notices and license terms. -->
                 ref="sale_pos.sale_pos_view_form"/>
             <field name="name">sale_pos_form</field>
         </record>
-        
+
          <record model="ir.action.report" id="report_invoice_pos">
             <field name="name">Invoice</field>
             <field name="model">sale.sale</field>
@@ -30,7 +30,7 @@ copyright notices and license terms. -->
             <field name="model">sale.sale,-1</field>
             <field name="action" ref="report_invoice_pos"/>
         </record>
-        
+
         <record model="res.group" id="group_stock_force">
             <field name="name">Nodux - Asignacion forzada de Stock</field>
         </record>
@@ -44,8 +44,8 @@ copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_stock_force"/>
         </record>
-        
-        
+
+
         <record model="ir.ui.view" id="card_view_tree">
             <field name="model">sale.card</field>
             <field name="type">tree</field>
@@ -57,7 +57,7 @@ copyright notices and license terms. -->
             <field name="type">form</field>
             <field name="name">card_form</field>
         </record>
-        
+
         <record model="ir.action.act_window" id="act_card_form">
             <field name="name">Tarjetas de Credito</field>
             <field name="res_model">sale.card</field>
@@ -74,8 +74,6 @@ copyright notices and license terms. -->
         </record>
         <menuitem parent="account.menu_account_configuration" action="act_card_form"
             id="menu_card_form"/>
-        
+
     </data>
 </tryton>
-
-
