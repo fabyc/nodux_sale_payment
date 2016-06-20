@@ -18,7 +18,7 @@ copyright notices and license terms. -->
             <field name="name">sale_pos_form</field>
         </record>
 
-         <record model="ir.action.report" id="report_invoice_pos">
+        <record model="ir.action.report" id="report_invoice_pos">
             <field name="name">Invoice</field>
             <field name="model">sale.sale</field>
             <field name="report_name">nodux_sale_payment.invoice_pos</field>
@@ -31,9 +31,18 @@ copyright notices and license terms. -->
             <field name="action" ref="report_invoice_pos"/>
         </record>
 
+        <record model="ir.action.report" id="sale.report_sale">
+            <field name="name">Cotización</field>
+            <field name="model">sale.sale</field>
+            <field name="report_name">sale.sale</field>
+            <field name="report">nodux_sale_payment/sale.odt</field>
+            <field name="style"></field>
+        </record>
+
         <record model="res.group" id="group_stock_force">
             <field name="name">Nodux - Asignacion forzada de Stock</field>
         </record>
+        
         <record model="res.user-res.group"
             id="user_admin_group_stock_foce">
             <field name="user" ref="res.user_admin"/>
@@ -44,7 +53,6 @@ copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_stock_force"/>
         </record>
-
 
         <record model="ir.ui.view" id="card_view_tree">
             <field name="model">sale.card</field>

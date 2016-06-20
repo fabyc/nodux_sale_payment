@@ -167,7 +167,7 @@ class Sale():
         amount = Decimal(0.0)
         id_i = None
         result = {n: {s.id: Decimal(0) for s in sales} for n in names}
-        
+
         for name in names:
             for sale in sales:
                 amount_unreconciled = Decimal(0.0)
@@ -184,7 +184,7 @@ class Sale():
                 if sale.payments:
                     for payment in sale.payments:
                         amount += payment.amount
-                        
+
                 if amount:
                     result[name][sale.id] = amount
                 else:
@@ -216,10 +216,10 @@ class Sale():
                         ])
                     for line in move_lines:
                         amount += line.credit
-                    
+
                 if sale.total_amount:
                     original = sale.total_amount
-                    
+
                 if sale.payments:
                     for payment in sale.payments:
                         amount += payment.amount
@@ -471,38 +471,44 @@ class WizardSalePayment(Wizard):
             return
 
         Product = Pool().get('product.product')
-        if sale.lines:
-            # get all products
-            products = []
-            locations = [sale.warehouse.id]
-            for line in sale.lines:
-                if not line.product or line.product.type not in PRODUCT_TYPES:
-                    continue
-                if line.product not in products:
-                    products.append(line.product)
-            # get quantity
-            with Transaction().set_context(locations=locations):
-                quantities = Product.get_quantity(
-                    products,
-                    sale.get_enough_stock_qty(),
-                    )
 
-            # check enough stock
-            for line in sale.lines:
-                if line.product.type not in PRODUCT_TYPES:
-                    continue
-                else:
-                    if line.product and line.product.id in quantities:
-                        qty = quantities[line.product.id]
-                    if qty < line.quantity:
-                        if not in_group():
-                            self.raise_user_error('No hay suficiente stock del producto: \n %s \n en la bodega %s', (line.product.name, sale.warehouse.name))
+        print "sale.acumulativo", sale.acumulativo
+        if sale.acumulativo == True:
+            print "Acumulativo ", sale.acumulativo
+            pass
+        else:
+            if sale.lines:
+                # get all products
+                products = []
+                locations = [sale.warehouse.id]
+                for line in sale.lines:
+                    if not line.product or line.product.type not in PRODUCT_TYPES:
+                        continue
+                    if line.product not in products:
+                        products.append(line.product)
+                # get quantity
+                with Transaction().set_context(locations=locations):
+                    quantities = Product.get_quantity(
+                        products,
+                        sale.get_enough_stock_qty(),
+                        )
 
-                        line.raise_user_warning('not_enough_stock_%s' % line.id,
-                               'No hay suficiente stock del producto: "%s"'
-                            'en la bodega "%s", para realizar esta venta.', (line.product.name, sale.warehouse.name))
-                        # update quantities
-                        quantities[line.product.id] = qty - line.quantity
+                # check enough stock
+                for line in sale.lines:
+                    if line.product.type not in PRODUCT_TYPES:
+                        continue
+                    else:
+                        if line.product and line.product.id in quantities:
+                            qty = quantities[line.product.id]
+                        if qty < line.quantity:
+                            if not in_group():
+                                self.raise_user_error('No hay suficiente stock del producto: \n %s \n en la bodega %s', (line.product.name, sale.warehouse.name))
+
+                            line.raise_user_warning('not_enough_stock_%s' % line.id,
+                                   'No hay suficiente stock del producto: "%s"'
+                                'en la bodega "%s", para realizar esta venta.', (line.product.name, sale.warehouse.name))
+                            # update quantities
+                            quantities[line.product.id] = qty - line.quantity
 
         if user.id != 0 and not sale_device:
             self.raise_user_error('not_sale_device')
@@ -642,7 +648,7 @@ class WizardSalePayment(Wizard):
                 return 'end'
         else:
             if sale.total_amount != sale.paid_amount:
-                return 'start'
+                return 'end'
             if sale.state != 'draft':
                 return 'end'
             sale.description = sale.reference
@@ -741,19 +747,19 @@ class InvoiceReportPos(Report):
                 descuento = Decimal(0.00)
         return descuento
 
-    
+
     @classmethod
     def _get_subtotal_14(cls, Sale, sale):
         subtotal14 = Decimal(0.00)
         pool = Pool()
-        
+
         for line in sale.lines:
             if  line.taxes:
                 for t in line.taxes:
                     if str('{:.0f}'.format(t.rate*100)) == '14':
                         subtotal14= subtotal14 + (line.amount)
         return subtotal14
-        
+
     @classmethod
     def _get_subtotal_12(cls, Sale, sale):
         subtotal12 = Decimal(0.00)
