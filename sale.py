@@ -569,6 +569,9 @@ class WizardSalePayment(Wizard):
 
         active_id = Transaction().context.get('active_id', False)
         sale = Sale(active_id)
+        if sale.self_pick_up == False:
+            sale.create_shipment('out')
+            sale.set_shipment_state()
         date = Pool().get('ir.date')
         date = date.today()
         if form.payment_amount == 0 and form.party.vat_number == '9999999999999':
