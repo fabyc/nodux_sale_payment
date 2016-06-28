@@ -26,7 +26,7 @@ except:
     print("Please install it...!")
 
 __all__ = ['Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos', 'ReturnSale']
-__metaclass__ = PoolMeta
+
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
 
@@ -65,6 +65,7 @@ class Card(ModelSQL, ModelView):
             return self.name
 
 class Sale():
+    __metaclass__ = PoolMeta
     __name__ = 'sale.sale'
     acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo",  states={
                 'readonly': ~Eval('active', True),
@@ -292,7 +293,7 @@ class Sale():
                 cls.do([sale])
 
 class SalePaymentForm():
-    'Sale Payment Form'
+    __metaclass__ = PoolMeta
     __name__ = 'sale.payment.form'
 
     recibido = fields.Numeric('Valor recibido del cliente', help = "Ingrese el monto de dinero que reciba del cliente",
@@ -305,9 +306,6 @@ class SalePaymentForm():
         depends=['currency_digits'], states={
                 'invisible': Eval('tipo_p') != 'efectivo',
                 })
-    """
-    tipo_p = fields.Function(fields.Char('Tipo de Pago'),'on_change_with_journal')
-    """
     tipo_p =fields.Selection([
             ('',''),
             ('efectivo','Efectivo'),
@@ -315,7 +313,6 @@ class SalePaymentForm():
             ('deposito','Deposito'),
             ('cheque','Cheque'),
             ],'Forma de Pago', readonly=True)
-    #forma de pago-> cheque
     banco =  fields.Many2One('bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
@@ -412,7 +409,7 @@ class SalePaymentForm():
         return Decimal(0.0)
 
 class WizardSalePayment(Wizard):
-    'Wizard Sale Payment'
+    __metaclass__ = PoolMeta
     __name__ = 'sale.payment'
     print_ = StateAction('nodux_sale_payment.report_invoice_pos')
 
@@ -472,9 +469,7 @@ class WizardSalePayment(Wizard):
 
         Product = Pool().get('product.product')
 
-        print "sale.acumulativo", sale.acumulativo
         if sale.acumulativo == True:
-            print "Acumulativo ", sale.acumulativo
             pass
         else:
             if sale.lines:
@@ -788,7 +783,7 @@ class InvoiceReportPos(Report):
         return subtotal0
 
 class ReturnSale(Wizard):
-    'Return Sale'
+    __metaclass__ = PoolMeta
     __name__ = 'sale.return_sale'
 
     start = StateView('sale.return_sale.start',
