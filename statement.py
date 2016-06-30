@@ -27,7 +27,6 @@ class Statement:
 
     @fields.depends('name', 'tipo_pago')
     def on_change_name(self):
-        result = {}
         tipo_pago = ""
         if self.name:
             name = self.name.lower()
@@ -40,5 +39,4 @@ class Statement:
             if 'cheque' in name:
                 tipo_pago = 'cheque'
 
-        result['tipo_pago'] = tipo_pago
-        return result
+        self.tipo_pago = tipo_pago

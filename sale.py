@@ -143,13 +143,9 @@ class Sale():
 
     @fields.depends('acumulativo', 'party')
     def on_change_acumulativo(self):
-        pool = Pool()
-        res= {}
         if self.acumulativo:
-            if self.acumulativo == True and self.party.vat_number == '9999999999999':
-                res['acumulativo'] = False
-                return res
-        return res
+            if self.acumulativo == True and self.party.code == '9999999999999':
+                self.acumulativo = False
 
     def get_amount2words(self, value):
         if conversor:
@@ -236,8 +232,7 @@ class Sale():
         done = []
         process = []
         for sale in sales:
-            sale.create_invoice('out_invoice')
-            sale.create_invoice('out_credit_note')
+            sale.create_invoice()
             sale.set_invoice_state()
             sale.create_shipment('out')
             sale.create_shipment('return')
@@ -373,25 +368,22 @@ class SalePaymentForm():
 
     @fields.depends('payment_amount', 'recibido')
     def on_change_recibido(self):
-        result = {}
         cambio = Decimal(0.0)
         if self.recibido and self.payment_amount:
             cambio = Decimal(0.0)
             cambio = (self.recibido) - (self.payment_amount)
-        result['cambio_cliente'] = cambio
-        return result
+        self.cambio_cliente = cambio
 
     @fields.depends('journal', 'party')
     def on_change_journal(self):
         if self.journal:
-            result = {}
             pool = Pool()
             Statement=pool.get('account.statement')
             statement = Statement.search([('journal', '=', self.journal.id)])
 
             if statement:
                 for s in statement:
-                    result['tipo_p'] = s.tipo_pago
+                    self.tipo_p = s.tipo_pago
                     tipo_p = s.tipo_pago
                 if tipo_p :
                     pass
@@ -401,8 +393,7 @@ class SalePaymentForm():
                  self.raise_user_error('No ha creado el estado de cuenta para el punto de venta')
             if tipo_p == 'cheque':
                 titular = self.party.name
-                result['titular'] = titular
-        return result
+                self.titular = titular
 
     @staticmethod
     def default_cambio_cliente():
@@ -569,7 +560,7 @@ class WizardSalePayment(Wizard):
             sale.set_shipment_state()
         date = Pool().get('ir.date')
         date = date.today()
-        if form.payment_amount == 0 and form.party.vat_number == '9999999999999':
+        if form.payment_amount == 0 and form.party.vat_code == '9999999999999':
             self.raise_user_error('No se puede dar credito a consumidor final, monto a pagar no puede ser %s', form.payment_amount)
 
         if form.tipo_p == 'cheque':
@@ -660,15 +651,22 @@ class InvoiceReportPos(Report):
     __name__ = 'nodux_sale_payment.invoice_pos'
 
     @classmethod
-    def parse(cls, report, records, data, localcontext):
+    def get_context(cls, records, data):
         pool = Pool()
         User = pool.get('res.user')
         Invoice = pool.get('account.invoice')
         Sale = pool.get('sale.sale')
         sale = records[0]
         TermLines = pool.get('account.invoice.payment_term.line')
+        TermLinesRela = pool.get('account.invoice.payment_term.line.relativedelta')
         invoices = Invoice.search([('description', '=', sale.reference), ('description', '!=', None)])
         cont = 0
+        invoice_e = 'false'
+        context = Transaction().context
+
+        report_context = super(InvoiceReportPos, cls).get_context(
+            records, data)
+
         if invoices:
             for i in invoices:
                 invoice = i
@@ -676,7 +674,6 @@ class InvoiceReportPos(Report):
         else:
             invoice_e = 'false'
             invoice = sale
-
         if sale.tipo_p:
             tipo = (sale.tipo_p).upper()
         else:
@@ -684,8 +681,11 @@ class InvoiceReportPos(Report):
         if sale.payment_term:
             term = sale.payment_term
             termlines = TermLines.search([('payment', '=', term.id)])
+
             for t in termlines:
-                t_f = t
+                termlinesrela = TermLinesRela.search([('line', '=', t.id)])
+                for t_l_r in termlinesrela:
+                    t_f = t_l_r
                 cont += 1
 
         if cont == 1 and t_f.days == 0:
@@ -700,22 +700,21 @@ class InvoiceReportPos(Report):
             decimales='0.0'
 
         user = User(Transaction().user)
-        localcontext['user'] = user
-        localcontext['company'] = user.company
-        localcontext['invoice'] = invoice
-        localcontext['invoice_e'] = invoice_e
-        localcontext['subtotal_0'] = cls._get_subtotal_0(Sale, sale)
-        localcontext['subtotal_12'] = cls._get_subtotal_12(Sale, sale)
-        localcontext['subtotal_14'] = cls._get_subtotal_14(Sale, sale)
-        localcontext['descuento'] = cls._get_descuento(Sale, sale)
-        localcontext['forma'] = forma
-        localcontext['tipo'] = tipo
-        localcontext['amount2words']=cls._get_amount_to_pay_words(Sale, sale)
-        localcontext['decimales'] = decimales
-        localcontext['lineas'] = cls._get_lineas(Sale, sale)
+        report_context['user'] = user
+        report_context['company'] = user.company
+        report_context['invoice'] = invoice
+        report_context['invoice_e'] = invoice_e
+        report_context['subtotal_0'] = cls._get_subtotal_0(Sale, sale)
+        report_context['subtotal_12'] = cls._get_subtotal_12(Sale, sale)
+        report_context['subtotal_14'] = cls._get_subtotal_14(Sale, sale)
+        report_context['descuento'] = cls._get_descuento(Sale, sale)
+        report_context['forma'] = forma
+        report_context['tipo'] = tipo
+        report_context['amount2words']=cls._get_amount_to_pay_words(Sale, sale)
+        report_context['decimales'] = decimales
+        report_context['lineas'] = cls._get_lineas(Sale, sale)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
-        return super(InvoiceReportPos, cls).parse(report, records, data,
-                localcontext=localcontext)
+        return report_context
 
     @classmethod
     def _get_amount_to_pay_words(cls, Sale, sale):
