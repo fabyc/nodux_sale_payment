@@ -472,9 +472,7 @@ class WizardSalePayment(Wizard):
 
         Product = Pool().get('product.product')
 
-        print "sale.acumulativo", sale.acumulativo
         if sale.acumulativo == True:
-            print "Acumulativo ", sale.acumulativo
             pass
         else:
             if sale.lines:
@@ -732,7 +730,6 @@ class InvoiceReportPos(Report):
     @classmethod
     def _get_lineas(cls, Sale, sale):
         cont = 0
-
         for line in sale.lines:
             cont += 1
         return cont
@@ -822,7 +819,7 @@ class ReturnSale(Wizard):
             return origin and group in user.groups
         if not in_group():
             self.raise_user_error("No esta autorizado a realizar una devolucion")
-
+        
         return_sales = Sale.copy(sales)
         for sale in return_sales:
             for line in sale.lines:
