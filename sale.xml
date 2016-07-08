@@ -34,7 +34,7 @@ copyright notices and license terms. -->
         <record model="ir.action.report" id="sale.report_sale">
             <field name="name">Cotización</field>
             <field name="model">sale.sale</field>
-            <field name="report_name">sale.sale</field>
+            <field name="report_name">sale.sale.discount</field>
             <field name="report">nodux_sale_payment/sale.odt</field>
             <field name="style"></field>
         </record>
@@ -42,7 +42,7 @@ copyright notices and license terms. -->
         <record model="res.group" id="group_stock_force">
             <field name="name">Nodux - Asignacion forzada de Stock</field>
         </record>
-        
+
         <record model="res.user-res.group"
             id="user_admin_group_stock_foce">
             <field name="user" ref="res.user_admin"/>
