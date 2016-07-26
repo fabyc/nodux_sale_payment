@@ -48,6 +48,7 @@ copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_stock_force"/>
         </record>
+
         <record model="res.user-res.group"
             id="user_trigger_group_stock_force">
             <field name="user" ref="res.user_admin"/>

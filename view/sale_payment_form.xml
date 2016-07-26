@@ -6,8 +6,7 @@ copyright notices and license terms. -->
     <xpath
         expr="/form/field[@name='payment_amount']"
         position="after">
-        <label name="tipo_p"/>
-        <field name="tipo_p"/>
+        <field name="tipo_p" invisible="1"/>
         <newline/>
         <label name="banco"/>
         <field name="banco"/>
@@ -35,10 +34,12 @@ copyright notices and license terms. -->
         <field name="fecha_deposito"/>
         <label name="numero_deposito"/>
         <field name="numero_deposito"/>
-        <newline/> 
+        <newline/>
         <label name="recibido"/>
         <field name="recibido"/>
         <label name="cambio_cliente" />
         <field name="cambio_cliente"/>
+        <field name="credito" invisible="1"/>
+        <newline/>
     </xpath>
 </data>

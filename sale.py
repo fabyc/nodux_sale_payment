@@ -370,6 +370,8 @@ class SalePaymentForm():
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits'])
 
+    credito = fields.Boolean('Credito')
+
     @classmethod
     def __setup__(cls):
         super(SalePaymentForm, cls).__setup__()
@@ -475,6 +477,7 @@ class WizardSalePayment(Wizard):
         if sale.acumulativo == True:
             pass
         else:
+
             if sale.lines:
                 # get all products
                 products = []
@@ -516,17 +519,23 @@ class WizardSalePayment(Wizard):
         total = sale.total_amount
         if not term_lines:
             term_lines = [(Date.today(), total)]
-
+        credito = False
         if sale.paid_amount:
             payment_amount = sale.total_amount - sale.paid_amount
         else:
             payment_amount = sale.total_amount
+
+        if term_lines > 1:
+            credito == True
 
         for date, amount in term_lines:
             if date == Date.today():
                 if amount < 0 :
                     amount *=-1
                 payment_amount = amount
+            else:
+                payment_amount = Decimal(0.0)
+                credito = True
 
         if sale.paid_amount:
             amount = sale.total_amount - sale.paid_amount
@@ -549,6 +558,7 @@ class WizardSalePayment(Wizard):
             'currency_digits': sale.currency_digits,
             'party': sale.party.id,
             'tipo_p':tipo_p,
+            'credito':credito
             }
 
     def transition_pay_(self):
@@ -574,6 +584,14 @@ class WizardSalePayment(Wizard):
         date = date.today()
         if form.payment_amount == 0 and form.party.vat_number == '9999999999999':
             self.raise_user_error('No se puede dar credito a consumidor final, monto a pagar no puede ser %s', form.payment_amount)
+
+        if form.credito == True and form.payment_amount == sale.total_amount:
+            self.raise_user_error('No puede pagar el monto total %s en una venta a credito', form.payment_amount)
+
+        if form.credito == False and form.payment_amount < sale.total_amount:
+            self.raise_user_warning('not_credit%s' % sale.id,
+                   u'Esta seguro que desea abonar $%s '
+                'del valor total $%s, de la venta al CONTADO.', (form.payment_amount, sale.total_amount))
 
         if form.tipo_p == 'cheque':
             sale.tipo_p = form.tipo_p
@@ -819,7 +837,7 @@ class ReturnSale(Wizard):
             return origin and group in user.groups
         if not in_group():
             self.raise_user_error("No esta autorizado a realizar una devolucion")
-        
+
         return_sales = Sale.copy(sales)
         for sale in return_sales:
             for line in sale.lines:
