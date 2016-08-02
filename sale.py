@@ -139,6 +139,19 @@ class Sale():
                     'invisible':~Eval('acumulativo', False)
                     },
                 })
+    @classmethod
+    def in_group():
+
+        group = Group(ModelData.get_id('nodux_sale_payment',
+                'group_stock_force'))
+        transaction = Transaction()
+        user_id = transaction.user
+        if user_id == 0:
+            user_id = transaction.context.get('user', user_id)
+        if user_id == 0:
+            return True
+        user = User(user_id)
+        return origin and group in user.groups
 
     @fields.depends('acumulativo', 'party')
     def on_change_acumulativo(self):
@@ -529,7 +542,7 @@ class WizardSalePayment(Wizard):
             credito == True
 
         for date, amount in term_lines:
-            if date == Date.today():
+            if (date <= Date.today()):
                 if amount < 0 :
                     amount *=-1
                 payment_amount = amount
@@ -655,15 +668,15 @@ class WizardSalePayment(Wizard):
             invoices = Invoice.search([('description', '=', sale.description)])
 
             if sale.total_amount == sale.paid_amount:
-                return 'print_'
+                #return 'print_'
                 return 'end'
 
             if sale.total_amount != sale.paid_amount:
-                return 'print_'
+                #return 'print_'
                 return 'end'
 
             if sale.state != 'draft':
-                return 'print_'
+                #return 'print_'
                 return 'end'
         else:
             if sale.total_amount != sale.paid_amount:
@@ -764,7 +777,6 @@ class InvoiceReportPos(Report):
             else:
                 descuento = Decimal(0.00)
         return descuento
-
 
     @classmethod
     def _get_subtotal_14(cls, Sale, sale):
