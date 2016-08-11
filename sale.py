@@ -660,7 +660,7 @@ class WizardSalePayment(Wizard):
                 )
             payment.save()
 
-        if sale.acumulativo != True:
+        if zssssssale.acumulativo != True:
             sale.description = sale.reference
             sale.save()
             Sale.workflow_to_end([sale])
@@ -747,6 +747,7 @@ class InvoiceReportPos(Report):
         localcontext['amount2words']=cls._get_amount_to_pay_words(Sale, sale)
         localcontext['decimales'] = decimales
         localcontext['lineas'] = cls._get_lineas(Sale, sale)
+        localcontext['maturity_date'] = cls._get_maturity_date(Invoice, invoice)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)
@@ -813,6 +814,24 @@ class InvoiceReportPos(Report):
                     if str('{:.0f}'.format(t.rate*100)) == '0':
                         subtotal0= subtotal0 + (line.amount)
         return subtotal0
+
+    @classmethod
+    def _get_maturity_date(cls, Invoice, invoice):
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+        MoveLine = pool.get('account.move.line')
+        PaymentLine = pool.get('account.voucher.line.paymode')
+        Date = pool.get('ir.date')
+        id_i = None
+        date = Date.today()
+
+        move = invoice.move
+        lines = MoveLine.search([('move', '=', move), ('party', '!=', None), ('maturity_date', '!=', None)])
+        if lines:
+            for l in lines:
+                date = l.maturity_date
+        return date
+
 
 class ReturnSale(Wizard):
     'Return Sale'
