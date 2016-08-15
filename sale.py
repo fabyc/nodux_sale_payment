@@ -856,8 +856,18 @@ class ReturnSale(Wizard):
             ModelData = pool.get('ir.model.data')
             User = pool.get('res.user')
             Group = pool.get('res.group')
-            group = Group(ModelData.get_id('nodux_account_ec_pymes',
-                        'group_sale_return'))
+            Module = pool.get('ir.module.module')
+            module_pymes = None
+            module = None
+            module_pymes = Module.search([('name', '=', 'nodux_account_ec_pymes'), ('state', '=', 'installed')])
+            module = Module.search([('name', '=', 'nodux_account_ec'), ('state', '=', 'installed')])
+            if module_pymes:
+                group = Group(ModelData.get_id('nodux_account_ec_pymes',
+                            'group_sale_return'))
+            if module:
+                group = Group(ModelData.get_id('nodux_account_ec',
+                            'group_sale_return'))
+
             transaction = Transaction()
             user_id = transaction.user
             if user_id == 0:
