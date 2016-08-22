@@ -660,7 +660,7 @@ class WizardSalePayment(Wizard):
                 )
             payment.save()
 
-        if zssssssale.acumulativo != True:
+        if sale.acumulativo != True:
             sale.description = sale.reference
             sale.save()
             Sale.workflow_to_end([sale])
