@@ -747,7 +747,10 @@ class InvoiceReportPos(Report):
         localcontext['amount2words']=cls._get_amount_to_pay_words(Sale, sale)
         localcontext['decimales'] = decimales
         localcontext['lineas'] = cls._get_lineas(Sale, sale)
-        localcontext['maturity_date'] = cls._get_maturity_date(Invoice, invoice)
+        if (sale.state == 'quotation') | (sale.state == 'draft'):
+            pass
+        else:
+            localcontext['maturity_date'] = cls._get_maturity_date(Invoice, invoice)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)
