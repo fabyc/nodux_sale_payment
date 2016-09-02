@@ -197,7 +197,6 @@ class Sale():
                 if sale.payments:
                     for payment in sale.payments:
                         amount += payment.amount
-
                 if amount:
                     result[name][sale.id] = amount
                 else:
@@ -240,6 +239,9 @@ class Sale():
                     result[name][sale.id] = original - amount
                 else:
                     result[name][sale.id] = sale.total_amount - sale.paid_amount
+                    
+                if (sale.invoice_state == 'paid') and (sale.state == 'done'):
+                    result[name][sale.id] = Decimal(0.0)
         return result
 
     @classmethod
