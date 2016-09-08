@@ -34,6 +34,16 @@ class Invoice(Workflow, ModelSQL, ModelView):
         move_lines = self._get_move_line_invoice_line()
         move_lines += self._get_move_line_invoice_tax()
 
+        if self.type == 'in_invoice':
+            Module = pool.get('ir.module.module')
+            module = None
+            module_w = Module.search([('name', '=', 'nodux_account_withholding_in_ec'), ('state', '=', 'installed')])
+            for m in module_w:
+                module = m
+            if module:
+                #if self.party.aplica_retencion == True:
+                move_lines += self._get_move_line_invoice_withholding()
+
         total = Decimal('0.0')
         total_currency = Decimal('0.0')
         for line in move_lines:
@@ -42,7 +52,7 @@ class Invoice(Workflow, ModelSQL, ModelView):
                 total_currency += line['amount_second_currency'].copy_sign(
                     line['debit'] - line['credit'])
         total = self.currency.round(total)
-        print "El monto total", total
+
         term_lines = self.payment_term.compute(total, self.company.currency,
             self.invoice_date)
         remainder_total_currency = total_currency
@@ -70,6 +80,19 @@ class Invoice(Workflow, ModelSQL, ModelView):
         self.write([self], {
                 'move': move.id,
                 })
+        if self.type == 'in_invoice':
+            if module:
+                if self.no_generate_withholding == True:
+                    pass
+                else:
+                    Withholding = Pool().get('account.withholding')
+                    withholdings = Withholding.search([('number', '=', self.ref_withholding)])
+                    for w in withholdings:
+                        withholding = w
+                    withholding.write([withholding], {
+                        'move': move.id,
+                        'ref_invoice':self.id,
+                        })
         return move
 
 class InvoiceLine(ModelSQL, ModelView):
