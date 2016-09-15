@@ -573,7 +573,8 @@ class WizardSalePayment(Wizard):
             'currency_digits': sale.currency_digits,
             'party': sale.party.id,
             'tipo_p':tipo_p,
-            'credito':credito
+            'credito':credito,
+            'amount':total,
             }
 
     def transition_pay_(self):
