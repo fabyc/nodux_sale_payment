@@ -42,5 +42,6 @@ copyright notices and license terms. -->
         <field name="credito" invisible="1"/>
         <newline/>
         <field name="amount" invisible="1"/>
+        <newline/>
     </xpath>
 </data>
