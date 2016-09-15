@@ -730,8 +730,9 @@ class InvoiceReportPos(Report):
             forma = 'CREDITO'
 
         if sale.total_amount:
-            d = str(sale.total_amount)
-            decimales = d[-2:]
+            d = str(sale.total_amount).split('.')
+            decimales = d[1]
+            decimales = decimales[0:2]
         else:
             decimales='0.0'
 
@@ -753,9 +754,20 @@ class InvoiceReportPos(Report):
             pass
         else:
             localcontext['maturity_date'] = cls._get_maturity_date(Invoice, invoice)
+        localcontext['facturacion_electronica'] = cls._get_facelect(Invoice, invoice)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
         return super(InvoiceReportPos, cls).parse(report, records, data,
                 localcontext=localcontext)
+
+    @classmethod
+    def _get_facelect(cls, Invoice, invoice):
+        Modules = Pool().get('ir.module.module')
+        module_einvoice = None
+        module_einvoice = Modules.search([('name', '=', 'nodux_account_electronic_invoice_ec'), ('state', '=', 'installed')])
+        facturacion_electronica = False
+        if module_einvoice:
+            facturacion_electronica = True
+        return facturacion_electronica
 
     @classmethod
     def _get_amount_to_pay_words(cls, Sale, sale):
