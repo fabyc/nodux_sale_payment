@@ -86,7 +86,7 @@ class Invoice(Workflow, ModelSQL, ModelView):
                     pass
                 else:
                     Withholding = Pool().get('account.withholding')
-                    withholdings = Withholding.search([('number', '=', self.ref_withholding)])
+                    withholdings = Withholding.search([('number', '=', self.ref_withholding), ('fisic', '=', False)])
                     for w in withholdings:
                         withholding = w
                     withholding.write([withholding], {
