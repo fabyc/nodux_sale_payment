@@ -66,7 +66,7 @@ class Card(ModelSQL, ModelView):
 
 class Sale():
     __name__ = 'sale.sale'
-    acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara un plan acumulativo",  states={
+    acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara plan acumulativo",  states={
                 'readonly': ~Eval('active', True),
                 })
 
@@ -189,11 +189,11 @@ class Sale():
                 if invoices:
                     for i in invoices:
                         invoice = i.number
-                    move_lines = MoveLine.search([
-                            ('description', '=', invoice),
-                        ])
-                    for line in move_lines:
-                        amount += line.credit
+                        move = i.move
+                    move_lines = MoveLine.search([('description', '=', invoice),('move', '=', move)])
+                    if move_lines:
+                        for line in move_lines:
+                            amount += line.credit
                 if sale.payments:
                     for payment in sale.payments:
                         amount += payment.amount
@@ -223,9 +223,8 @@ class Sale():
                 if invoices:
                     for i in invoices:
                         invoice = i.number
-                    move_lines = MoveLine.search([
-                            ('description', '=', invoice),
-                        ])
+                        move = i.move
+                    move_lines = MoveLine.search([('description', '=', invoice),('move', '=', move)])
                     for line in move_lines:
                         amount += line.credit
 
