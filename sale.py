@@ -172,7 +172,7 @@ class Sale():
     @classmethod
     def get_paid_amount(cls, sales, names):
         pool = Pool()
-
+        Move = pool.get('account.move')
         Invoice = pool.get('account.invoice')
         MoveLine = pool.get('account.move.line')
         InvoiceAccountMoveLine = pool.get('account.invoice-account.move.line')
@@ -190,24 +190,35 @@ class Sale():
                     for i in invoices:
                         invoice = i.number
                         move = i.move
-                    move_lines = MoveLine.search([('description', '=', invoice),('move', '=', move)])
+                    move_lines = MoveLine.search([('description', '=', invoice)])
+                    move_voucher = Move.search([('description', '=', sale.description)])
                     if move_lines:
                         for line in move_lines:
                             amount += line.credit
+
+                    if move_voucher:
+                        for voucher in move_voucher:
+                            for line_v in voucher.lines:
+                                if line_v.reconciliation == None:
+                                    amount += line_v.credit
                 if sale.payments:
                     for payment in sale.payments:
                         amount += payment.amount
-                if amount:
-                    result[name][sale.id] = amount
+                if sale.total_amount>Decimal(0.0):
+                    if amount:
+                        result[name][sale.id] = amount
+                    else:
+                        for payment in sale.payments:
+                            result[name][sale.id] += payment.amount
                 else:
-                    for payment in sale.payments:
-                        result[name][sale.id] += payment.amount
+                    result[name][sale.id] = Decimal(0.0)
         return result
 
     @classmethod
     def get_residual_amount(cls, sales, names):
         pool = Pool()
         Invoice = pool.get('account.invoice')
+        Move = pool.get('account.move')
         MoveLine = pool.get('account.move.line')
         InvoiceAccountMoveLine = pool.get('account.invoice-account.move.line')
         amount_unreconciled = Decimal(0.0)
@@ -224,9 +235,17 @@ class Sale():
                     for i in invoices:
                         invoice = i.number
                         move = i.move
-                    move_lines = MoveLine.search([('description', '=', invoice),('move', '=', move)])
-                    for line in move_lines:
-                        amount += line.credit
+                    move_lines = MoveLine.search([('description', '=', invoice)])
+                    move_voucher = Move.search([('description', '=', sale.description)])
+
+                    if move_lines:
+                        for line in move_lines:
+                            amount += line.credit
+                    if move_voucher:
+                        for voucher in move_voucher:
+                            for line_v in voucher.lines:
+                                if line_v.reconciliation == None:
+                                    amount += line_v.credit
 
                 if sale.total_amount:
                     original = sale.total_amount
@@ -242,6 +261,7 @@ class Sale():
                 if (sale.invoice_state == 'paid') and (sale.state == 'done'):
                     result[name][sale.id] = Decimal(0.0)
         return result
+
 
     @classmethod
     @ModelView.button
