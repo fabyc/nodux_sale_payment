@@ -85,6 +85,7 @@ class Invoice(Workflow, ModelSQL, ModelView):
                 if self.no_generate_withholding == True:
                     pass
                 else:
+                    print "La factura ", self
                     Withholding = Pool().get('account.withholding')
                     withholdings = Withholding.search([('number', '=', self.ref_withholding), ('fisic', '=', False)])
                     for w in withholdings:

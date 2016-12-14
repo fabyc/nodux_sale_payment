@@ -131,6 +131,7 @@ class Sale():
                 'invisible': Eval('tipo_p') != 'deposito',
                 })
 
+
     @classmethod
     def __setup__(cls):
         super(Sale, cls).__setup__()
@@ -261,7 +262,6 @@ class Sale():
                 if (sale.invoice_state == 'paid') and (sale.state == 'done'):
                     result[name][sale.id] = Decimal(0.0)
         return result
-
 
     @classmethod
     @ModelView.button
@@ -460,6 +460,7 @@ class WizardSalePayment(Wizard):
                 })
 
     def default_start(self, fields):
+        print "Esta ingresando aqui"
         pool = Pool()
         Sale = pool.get('sale.sale')
         User = pool.get('res.user')
@@ -594,6 +595,8 @@ class WizardSalePayment(Wizard):
                     else:
                         if sale.state == "done":
                             to_pay = sale.total_amount * (-1)
+
+
 
         return {
             'journal': sale_device.journal.id

@@ -38,7 +38,7 @@ copyright notices and license terms. -->
             <field name="report_name">sale.sale</field>
             <field name="report">nodux_sale_payment/sale.odt</field>
         </record>
-
+        <!--Group-->
         <record model="res.group" id="group_stock_force">
             <field name="name">Nodux - Asignacion forzada de Stock</field>
         </record>
@@ -54,7 +54,8 @@ copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_stock_force"/>
         </record>
-
+        
+        <!-- Views -->
         <record model="ir.ui.view" id="card_view_tree">
             <field name="model">sale.card</field>
             <field name="type">tree</field>
