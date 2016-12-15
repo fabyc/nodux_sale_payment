@@ -65,17 +65,17 @@ msgctxt "field:sale.payment.form,cambio_cliente:"
 msgid "SU CAMBIO"
 msgstr "SU CAMBIO"
 
+msgctxt "field:sale.payment.form,credito:"
+msgid "Credito"
+msgstr ""
+
 msgctxt "field:sale.payment.form,fecha_deposito:"
 msgid "Fecha de Deposito"
 msgstr "Fecha de depósito"
 
 msgctxt "field:sale.payment.form,fecha_deposito_cheque:"
 msgid "Fecha de Cheque"
-msgstr "Fecha de depósito"
-
-msgctxt "field:sale.payment.form,lines_credits:"
-msgid "Credits"
-msgstr "Créditos"
+msgstr "Fecha de Cheque"
 
 msgctxt "field:sale.payment.form,lote:"
 msgid "Numero de lote"
@@ -190,12 +190,12 @@ msgid "Ingrese el monto de dinero que reciba del cliente"
 msgstr "Ingrese el monto de dinero que reciba del cliente"
 
 msgctxt "help:sale.sale,acumulativo:"
-msgid "Seleccione si realizara un plan acumulativo"
+msgid "Seleccione si realizara plan acumulativo"
 msgstr "Marque si desea realizar un plan acumulativo"
 
 msgctxt "model:ir.action,name:"
 msgid "Agregar Credito"
-msgstr "Agregar crédito"
+msgstr "Agregar Crédito"
 
 msgctxt "model:ir.action,name:act_card_form"
 msgid "Tarjetas de Credito"
@@ -204,10 +204,6 @@ msgstr ""
 msgctxt "model:ir.action,name:report_invoice_pos"
 msgid "Invoice"
 msgstr "Factura"
-
-msgctxt "model:ir.action,name:report_sale"
-msgid "Cotización"
-msgstr ""
 
 msgctxt "model:ir.ui.menu,name:menu_card_form"
 msgid "Tarjetas de Credito"
@@ -286,6 +282,11 @@ msgid "Cliente:"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid ""
+"Consulte sus comprobantes electrónicos en: http://comprobantes.nodux.ec"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "Código"
 msgstr ""
 
@@ -318,6 +319,10 @@ msgid "IVA 1"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Nodux - (07) 2 560215 - 0999323367 - hola@nodux.e"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "Nodux Cía. Ltda.: (07) 2 560215 – 0999323367 – hola@nodux.ec"
 msgstr ""
 
@@ -342,6 +347,10 @@ msgid "SON:"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Sistema"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "Subt."
 msgstr ""
 
@@ -362,6 +371,10 @@ msgid "Teléfono"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "Vencimiento:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "Vendedor:"
 msgstr ""
 
@@ -372,6 +385,10 @@ msgstr ""
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "________________"
 msgstr ""
+
+msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgid "c"
+msgstr "c"
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "total:"
