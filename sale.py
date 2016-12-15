@@ -460,7 +460,6 @@ class WizardSalePayment(Wizard):
                 })
 
     def default_start(self, fields):
-        print "Esta ingresando aqui"
         pool = Pool()
         Sale = pool.get('sale.sale')
         User = pool.get('res.user')
