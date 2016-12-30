@@ -54,8 +54,8 @@ copyright notices and license terms. -->
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_stock_force"/>
         </record>
-        
-        <!-- Views -->
+
+        <!-- Views Card -->
         <record model="ir.ui.view" id="card_view_tree">
             <field name="model">sale.card</field>
             <field name="type">tree</field>
@@ -85,5 +85,34 @@ copyright notices and license terms. -->
         <menuitem parent="account.menu_account_configuration" action="act_card_form"
             id="menu_card_form"/>
 
+        <!-- Views Sale Bank -->
+        <record model="ir.ui.view" id="sale_bank_view_tree">
+            <field name="model">sale.bank</field>
+            <field name="type">tree</field>
+            <field name="name">sale_bank_tree</field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_bank_view_form">
+            <field name="model">sale.bank</field>
+            <field name="type">form</field>
+            <field name="name">sale_bank_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_sale_bank_form">
+            <field name="name">Bancos Forma de Pago Ventas</field>
+            <field name="res_model">sale.bank</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_sale_bank_form_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="sale_bank_view_tree"/>
+            <field name="act_window" ref="act_sale_bank_form"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_sale_bank_form_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="sale_bank_view_form"/>
+            <field name="act_window" ref="act_sale_bank_form"/>
+        </record>
+        <menuitem parent="account.menu_account_configuration" action="act_sale_bank_form"
+            id="menu_sale_bank_form"/>
     </data>
 </tryton>

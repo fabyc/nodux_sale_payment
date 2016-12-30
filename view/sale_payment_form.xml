@@ -8,8 +8,8 @@ copyright notices and license terms. -->
         position="after">
         <field name="tipo_p" invisible="1"/>
         <newline/>
-        <label name="banco"/>
-        <field name="banco"/>
+        <label name="bancos"/>
+        <field name="bancos"/>
         <label name="numero_cuenta"/>
         <field name="numero_cuenta"/>
         <label name="fecha_deposito_cheque"/>
@@ -26,8 +26,8 @@ copyright notices and license terms. -->
         <label name="tarjeta"/>
         <field name="tarjeta"/>
         <newline/>
-        <label name="banco_deposito"/>
-        <field name="banco_deposito"/>
+        <label name="bancos_deposito"/>
+        <field name="bancos_deposito"/>
         <label name="numero_cuenta_deposito"/>
         <field name="numero_cuenta_deposito"/>
         <label name="fecha_deposito"/>

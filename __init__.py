@@ -9,6 +9,7 @@ from .invoice import *
 
 def register():
     Pool.register(
+        SaleBank,
         Card,
         SalePaymentForm,
         Statement,

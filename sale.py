@@ -25,7 +25,8 @@ except:
     print("Warning: Does not possible import numword module!")
     print("Please install it...!")
 
-__all__ = ['Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale', 'InvoiceReportPos', 'ReturnSale']
+__all__ = ['SaleBank','Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale',
+'InvoiceReportPos', 'ReturnSale']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
@@ -64,6 +65,31 @@ class Card(ModelSQL, ModelView):
         else:
             return self.name
 
+class SaleBank(ModelSQL, ModelView):
+    'Sale Bank'
+    __name__ = 'sale.bank'
+    name = fields.Char('Nombre', required=True)
+    banco =  fields.Many2One('bank', 'Banco', states={
+                'readonly': ~Eval('active', True),
+                })
+
+    @classmethod
+    def __setup__(cls):
+        super(SaleBank, cls).__setup__()
+
+    @classmethod
+    def search_rec_name(cls, name, clause):
+        return ['OR',
+            ('banco',) + tuple(clause[1:]),
+            (cls._rec_name,) + tuple(clause[1:]),
+            ]
+
+    def get_rec_name(self, name):
+        if self.banco:
+            return self.name + ' - ' + self.banco.party.name
+        else:
+            return self.name
+
 class Sale():
     __name__ = 'sale.sale'
     acumulativo = fields.Boolean ('Plan acumulativo', help = "Seleccione si realizara plan acumulativo",  states={
@@ -80,7 +106,7 @@ class Sale():
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits'])
 
-    banco =  fields.Many2One('bank', 'Banco', states={
+    bancos =  fields.Many2One('sale.bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
@@ -114,7 +140,7 @@ class Sale():
                 'invisible': Eval('tipo_p') != 'tarjeta',
                 })
     #forma de pago -> banco_deposito numero_cuenta_deposito fecha_deposito numero_deposito
-    banco_deposito =  fields.Many2One('bank', 'Banco', states={
+    bancos_deposito =  fields.Many2One('sale.bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'deposito',
                 })
@@ -350,7 +376,7 @@ class SalePaymentForm():
             ('cheque','Cheque'),
             ],'Forma de Pago', readonly=True)
     #forma de pago-> cheque
-    banco =  fields.Many2One('bank', 'Banco', states={
+    bancos =  fields.Many2One('sale.bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'cheque',
                 })
@@ -384,7 +410,7 @@ class SalePaymentForm():
                 'invisible': Eval('tipo_p') != 'tarjeta',
                 })
     #forma de pago -> banco_deposito numero_cuenta_deposito fecha_deposito numero_deposito
-    banco_deposito =  fields.Many2One('bank', 'Banco', states={
+    bancos_deposito =  fields.Many2One('sale.bank', 'Banco', states={
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'deposito',
                 })
