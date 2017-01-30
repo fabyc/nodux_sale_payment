@@ -89,10 +89,13 @@ class Invoice(Workflow, ModelSQL, ModelView):
                     withholdings = Withholding.search([('number', '=', self.ref_withholding), ('fisic', '=', False)])
                     for w in withholdings:
                         withholding = w
-                    withholding.write([withholding], {
-                        'move': move.id,
-                        'ref_invoice':self.id,
-                        })
+                    if withholdings:
+                        withholding.write([withholding], {
+                            'move': move.id,
+                            'ref_invoice':self.id,
+                            })
+                    else:
+                        self.raise_user_error('No ha generado la retencion, pase la factura a Borrador')
         return move
 
 class InvoiceLine(ModelSQL, ModelView):
