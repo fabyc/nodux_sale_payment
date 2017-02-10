@@ -195,7 +195,7 @@ class Sale():
             return (conversor.cardinal(int(value))).upper()
         else:
             return ''
-
+    """
     @classmethod
     def get_paid_amount(cls, sales, names):
         pool = Pool()
@@ -288,7 +288,7 @@ class Sale():
                 if (sale.invoice_state == 'paid') and (sale.state == 'done'):
                     result[name][sale.id] = Decimal(0.0)
         return result
-
+    """
     @classmethod
     @ModelView.button
     def process(cls, sales):
@@ -341,10 +341,6 @@ class Sale():
                 for payment in sale.payments:
                     invoice = sale.invoices[0]
                     payment.invoice = invoice.id
-                    # Because of account_invoice_party_without_vat module
-                    # could be installed, invoice party may be different of
-                    # payment party if payment party has not any vat
-                    # and both parties must be the same
                     if payment.party != invoice.party:
                         payment.party = invoice.party
                     payment.save()
@@ -766,6 +762,7 @@ class InvoiceReportPos(Report):
         cont = 0
         if invoices:
             for i in invoices:
+
                 invoice = i
                 invoice_e = 'true'
         else:
@@ -961,6 +958,7 @@ class ReturnSale(Wizard):
                 if line.type == 'line':
                     line.quantity *= -1
                     line.save()
+
         data = {'res_id': [s.id for s in return_sales]}
         if len(return_sales) == 1:
             action['views'].reverse()

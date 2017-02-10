@@ -22,6 +22,8 @@ def register():
     Pool.register(
         WizardSalePayment,
         ReturnSale,
+        OpenStatement,
+        CloseStatement,
         module='nodux_sale_payment', type_='wizard')
     Pool.register(
         InvoiceReportPos,
