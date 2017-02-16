@@ -341,6 +341,7 @@ class Sale():
                 for payment in sale.payments:
                     invoice = sale.invoices[0]
                     payment.invoice = invoice.id
+                    payment.description = sale.reference
                     if payment.party != invoice.party:
                         payment.party = invoice.party
                     payment.save()
