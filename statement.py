@@ -20,6 +20,8 @@ class Statement:
             ('tarjeta','Tarjeta de Credito'),
             ('deposito','Deposito'),
             ('cheque','Cheque'),
+            ('transferencia', 'Transferencia'),
+            ('dinero', 'Dinero Electronico'),
             ],'Forma de Pago')
 
     @classmethod
@@ -40,6 +42,10 @@ class Statement:
                 tipo_pago = 'deposito'
             if 'cheque' in name:
                 tipo_pago = 'cheque'
+            if 'trans' in name:
+                tipo_pago = 'transferencia'
+            if 'dine' in name:
+                tipo_pago = 'dinero'
 
         result['tipo_pago'] = tipo_pago
         return result
@@ -79,6 +85,10 @@ class OpenStatement():
                         tipo_pago = 'deposito'
                     if 'che' in name:
                         tipo_pago = 'cheque'
+                    if 'trans' in name:
+                        tipo_pago = 'transferencia'
+                    if 'dine' in name:
+                        tipo_pago = 'dinero'
 
                     values = {
                         'name': '%s - %s' % (device.rec_name, journal.rec_name),
