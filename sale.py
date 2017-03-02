@@ -195,7 +195,7 @@ class Sale():
             return (conversor.cardinal(int(value))).upper()
         else:
             return ''
-    """
+
     @classmethod
     def get_paid_amount(cls, sales, names):
         pool = Pool()
@@ -288,7 +288,7 @@ class Sale():
                 if (sale.invoice_state == 'paid') and (sale.state == 'done'):
                     result[name][sale.id] = Decimal(0.0)
         return result
-    """
+    
     @classmethod
     @ModelView.button
     def process(cls, sales):
