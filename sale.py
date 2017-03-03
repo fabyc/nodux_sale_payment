@@ -288,7 +288,7 @@ class Sale():
                 if (sale.invoice_state == 'paid') and (sale.state == 'done'):
                     result[name][sale.id] = Decimal(0.0)
         return result
-    
+
     @classmethod
     @ModelView.button
     def process(cls, sales):
@@ -347,6 +347,45 @@ class Sale():
                     payment.save()
             if sale.is_done():
                 cls.do([sale])
+
+    @classmethod
+    def enough_stock(cls, sales):
+        if not cls.check_enough_stock():
+            return
+
+        Product = Pool().get('product.product')
+
+        # get all products
+        products = []
+        for sale in sales:
+            locations = [sale.warehouse.id]
+            for line in sale.lines:
+                if not line.product or line.product.type not in PRODUCT_TYPES:
+                    continue
+                if line.product not in products:
+                    products.append(line.product)
+
+        # get quantity
+        with Transaction().set_context(locations=locations):
+            quantities = Product.get_quantity(
+                products,
+                cls.get_enough_stock_qty(),
+                )
+
+        # check enough stock
+        for sale in sales:
+            if sale.total_amount < Decimal(0.0):
+                pass
+            else:
+                for line in sale.lines:
+                    if line.product and line.product.id in quantities:
+                        qty = quantities[line.product.id]
+                        if qty < line.quantity:
+                            cls.raise_user_warning('not_enough_stock_%s' % line.id,
+                                'not_enough_stock', line.product.name)
+                        # update quantities
+                        quantities[line.product.id] = qty - line.quantity
+
 
 class SalePaymentForm():
     'Sale Payment Form'
@@ -554,6 +593,8 @@ class WizardSalePayment(Wizard):
                 # check enough stock
                 for line in sale.lines:
                     if line.product.type not in PRODUCT_TYPES:
+                        continue
+                    elif sale.total_amount < Decimal(0.0):
                         continue
                     else:
                         if line.product and line.product.id in quantities:
