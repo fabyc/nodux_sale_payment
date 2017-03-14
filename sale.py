@@ -362,6 +362,8 @@ class SalePaymentForm():
         digits=(16, Eval('currency_digits', 2)),
         depends=['currency_digits'])
 
+    credito = fields.Boolean('Credito')
+
     @classmethod
     def __setup__(cls):
         super(SalePaymentForm, cls).__setup__()
@@ -505,29 +507,47 @@ class WizardSalePayment(Wizard):
         if not term_lines:
             term_lines = [(Date.today(), total)]
 
+        credito = False
         if sale.paid_amount:
             payment_amount = sale.total_amount - sale.paid_amount
         else:
             payment_amount = sale.total_amount
 
+        if term_lines > 1:
+            credito = True
         for date, amount in term_lines:
-            if date == Date.today():
+            if date <= Date.today():
                 if amount < 0 :
                     amount *=-1
                 payment_amount = amount
+            else:
+                payment_amount = Decimal(0.0)
+                credito = True
 
         if sale.paid_amount:
             amount = sale.total_amount - sale.paid_amount
         else:
             amount = sale.total_amount
 
-        if payment_amount < amount:
-            to_pay = payment_amount
-        elif payment_amount > amount:
-            to_pay = amount
-
+        if sale.total_amount > Decimal(0.0):
+            if payment_amount < amount:
+                to_pay = payment_amount
+            elif payment_amount > amount:
+                to_pay = amount
+            else:
+                to_pay= amount
         else:
-            to_pay= amount
+            to_pay = Decimal(0.0)
+            sales = Sale.search([('description', '=', sale.description)])
+            for sale in sales:
+                if sale.total_amount > Decimal(0.0):
+                    if sale.paid_amount:
+                        if sale.paid_amount > Decimal(0.0) and sale.state != "done":
+                            to_pay = sale.paid_amount * (-1)
+                    else:
+                        if sale.state == "done":
+                            to_pay = sale.total_amount * (-1)
+
 
         return {
             'journal': sale_device.journal.id
@@ -537,6 +557,8 @@ class WizardSalePayment(Wizard):
             'currency_digits': sale.currency_digits,
             'party': sale.party.id,
             'tipo_p':tipo_p,
+            'credito' : credito,
+            'amount' :total,
             }
 
     def transition_pay_(self):
@@ -560,8 +582,21 @@ class WizardSalePayment(Wizard):
             sale.set_shipment_state()
         date = Pool().get('ir.date')
         date = date.today()
-        if form.payment_amount == 0 and form.party.vat_code == '9999999999999':
-            self.raise_user_error('No se puede dar credito a consumidor final, monto a pagar no puede ser %s', form.payment_amount)
+
+        for identifier in form.party.identifiers:
+            if form.payment_amount == 0 and identifier.code == '9999999999999':
+                self.raise_user_error('No se puede dar credito a consumidor final, monto a pagar no puede ser %s', form.payment_amount)
+
+            if sale.total_amount > 200 and identifier.code == '9999999999999':
+                self.raise_user_error('La factura supera los $200 de importe total, no puede ser emitida a nombre de CONSUMIDOR FINAL')
+
+        if form.credito == True and form.payment_amount == sale.total_amount:
+            self.raise_user_error('No puede pagar el monto total %s en una venta a credito', form.payment_amount)
+
+        if form.credito == False and form.payment_amount < sale.total_amount:
+            self.raise_user_warning('not_credit%s' % sale.id,
+                   u'Esta seguro que desea abonar $%s '
+                'del valor total $%s, de la venta al CONTADO.', (form.payment_amount, sale.total_amount))
 
         if form.tipo_p == 'cheque':
             sale.tipo_p = form.tipo_p

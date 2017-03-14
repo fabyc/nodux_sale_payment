@@ -35,10 +35,14 @@ copyright notices and license terms. -->
         <field name="fecha_deposito"/>
         <label name="numero_deposito"/>
         <field name="numero_deposito"/>
-        <newline/> 
+        <newline/>
         <label name="recibido"/>
         <field name="recibido"/>
         <label name="cambio_cliente" />
         <field name="cambio_cliente"/>
+        <field name="credito" invisible="1"/>
+        <newline/>
+        <field name="amount" invisible="1"/>
+        <newline/>
     </xpath>
 </data>
