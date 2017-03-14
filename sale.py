@@ -512,8 +512,7 @@ class WizardSalePayment(Wizard):
             payment_amount = sale.total_amount - sale.paid_amount
         else:
             payment_amount = sale.total_amount
-
-        if term_lines > 1:
+        if len(term_lines) > 1:
             credito = True
         for date, amount in term_lines:
             if date <= Date.today():
@@ -547,7 +546,6 @@ class WizardSalePayment(Wizard):
                     else:
                         if sale.state == "done":
                             to_pay = sale.total_amount * (-1)
-
 
         return {
             'journal': sale_device.journal.id
