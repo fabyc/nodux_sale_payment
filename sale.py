@@ -655,10 +655,11 @@ class WizardSalePayment(Wizard):
                     if sale.paid_amount:
                         if sale.paid_amount > Decimal(0.0) and sale.state != "done":
                             to_pay = sale.paid_amount * (-1)
+                        if sale.paid_amount > Decimal(0.0) and sale.state == "done":
+                            to_pay = sale.paid_amount * (-1)
                     else:
                         if sale.state == "done":
                             to_pay = sale.total_amount * (-1)
-
 
 
         return {
