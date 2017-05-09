@@ -23,7 +23,6 @@ copyright notices and license terms. -->
             <field name="model">sale.sale</field>
             <field name="report_name">nodux_sale_payment.invoice_pos</field>
             <field name="report">nodux_sale_payment/invoice.odt</field>
-            <field name="style"></field>
         </record>
 
         <record model="ir.action.keyword" id="report_invoice_pos_keyword">
@@ -32,11 +31,16 @@ copyright notices and license terms. -->
             <field name="action" ref="report_invoice_pos"/>
         </record>
 
-        <record model="ir.action.report" id="sale.report_sale">
+        <record model="ir.action.report" id="report_sale">
             <field name="name">Cotizacion</field>
             <field name="model">sale.sale</field>
-            <field name="report_name">sale.sale</field>
+            <field name="report_name">sale.quotation</field>
             <field name="report">nodux_sale_payment/sale.odt</field>
+        </record>
+        <record model="ir.action.keyword" id="report_sale_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">sale.sale,-1</field>
+            <field name="action" ref="report_sale"/>
         </record>
         <!--Group-->
         <record model="res.group" id="group_stock_force">

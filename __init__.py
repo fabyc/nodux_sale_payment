@@ -27,4 +27,5 @@ def register():
         module='nodux_sale_payment', type_='wizard')
     Pool.register(
         InvoiceReportPos,
+        QuotationReport,
         module='nodux_sale_payment', type_='report')

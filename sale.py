@@ -14,9 +14,9 @@ from dateutil.relativedelta import relativedelta
 from itertools import groupby, chain
 from functools import partial
 from trytond.report import Report
+from trytond.modules.company import CompanyReport
 from trytond.transaction import Transaction
 import os
-
 conversor = None
 try:
     from numword import numword_es
@@ -26,7 +26,7 @@ except:
     print("Please install it...!")
 
 __all__ = ['SaleBank','Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale',
-'InvoiceReportPos', 'ReturnSale']
+'InvoiceReportPos', 'ReturnSale', 'QuotationReport']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
@@ -156,7 +156,6 @@ class Sale():
                 'readonly': ~Eval('active', True),
                 'invisible': Eval('tipo_p') != 'deposito',
                 })
-
 
     @classmethod
     def __setup__(cls):
@@ -1017,3 +1016,7 @@ class ReturnSale(Wizard):
                         s.state = 'draft'
                         s.save()
             sale.cancel(sales)
+
+
+class QuotationReport(CompanyReport):
+    __name__ = 'sale.quotation'
