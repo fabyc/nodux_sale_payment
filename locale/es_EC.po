@@ -13,6 +13,54 @@ msgctxt "field:account.statement,tipo_pago:"
 msgid "Forma de Pago"
 msgstr "Forma de pago"
 
+msgctxt "field:nodux_sale_payment.print_sumary_sales.start,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:nodux_sale_payment.print_sumary_sales.start,fiscalyear:"
+msgid "Fiscal Year"
+msgstr "Año Fiscal"
+
+msgctxt "field:nodux_sale_payment.print_sumary_sales.start,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:nodux_sale_payment.print_sumary_sales.start,periodo:"
+msgid "Period"
+msgstr "Período"
+
+msgctxt "field:sale.bank,banco:"
+msgid "Banco"
+msgstr "Banco"
+
+msgctxt "field:sale.bank,create_date:"
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+msgctxt "field:sale.bank,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:sale.bank,id:"
+msgid "ID"
+msgstr "Identificador"
+
+msgctxt "field:sale.bank,name:"
+msgid "Nombre"
+msgstr ""
+
+msgctxt "field:sale.bank,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:sale.bank,write_date:"
+msgid "Write Date"
+msgstr "Modificado por usuario"
+
+msgctxt "field:sale.bank,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
 msgctxt "field:sale.card,banco:"
 msgid "Banco"
 msgstr "Banco"
@@ -53,11 +101,11 @@ msgctxt "field:sale.payment.form,anticipo:"
 msgid "Anticipo"
 msgstr ""
 
-msgctxt "field:sale.payment.form,banco:"
+msgctxt "field:sale.payment.form,bancos:"
 msgid "Banco"
 msgstr "Banco"
 
-msgctxt "field:sale.payment.form,banco_deposito:"
+msgctxt "field:sale.payment.form,bancos_deposito:"
 msgid "Banco"
 msgstr "Banco"
 
@@ -129,11 +177,11 @@ msgctxt "field:sale.sale,acumulativo:"
 msgid "Plan acumulativo"
 msgstr "Plan acumulativo"
 
-msgctxt "field:sale.sale,banco:"
+msgctxt "field:sale.sale,bancos:"
 msgid "Banco"
 msgstr "Banco"
 
-msgctxt "field:sale.sale,banco_deposito:"
+msgctxt "field:sale.sale,bancos_deposito:"
 msgid "Banco"
 msgstr "Banco"
 
@@ -201,16 +249,48 @@ msgctxt "model:ir.action,name:act_card_form"
 msgid "Tarjetas de Credito"
 msgstr ""
 
+msgctxt "model:ir.action,name:act_sale_bank_form"
+msgid "Bancos Forma de Pago Ventas"
+msgstr ""
+
 msgctxt "model:ir.action,name:report_invoice_pos"
 msgid "Invoice"
 msgstr "Factura"
+
+msgctxt "model:ir.action,name:report_sale"
+msgid "Cotizacion"
+msgstr ""
+
+msgctxt "model:ir.action,name:report_sumary_sales"
+msgid "Resumen de Ventas"
+msgstr ""
+
+msgctxt "model:ir.action,name:wizard_sumary_sales"
+msgid "Generar Resumen de Ventas"
+msgstr ""
 
 msgctxt "model:ir.ui.menu,name:menu_card_form"
 msgid "Tarjetas de Credito"
 msgstr ""
 
+msgctxt "model:ir.ui.menu,name:menu_sale_bank_form"
+msgid "Bancos Forma de Pago Ventas"
+msgstr ""
+
+msgctxt "model:ir.ui.menu,name:menu_sumary_sales"
+msgid "Generar Resumen de Ventas"
+msgstr ""
+
+msgctxt "model:nodux_sale_payment.print_sumary_sales.start,name:"
+msgid "Generate Sales Annexed Start"
+msgstr "Generar Resúmen de Ventas"
+
 msgctxt "model:res.group,name:group_stock_force"
 msgid "Nodux - Asignacion forzada de Stock"
+msgstr ""
+
+msgctxt "model:sale.bank,name:"
+msgid "Sale Bank"
 msgstr ""
 
 msgctxt "model:sale.card,name:"
@@ -218,76 +298,11 @@ msgid "card"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "$"
-msgstr "$"
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "%:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid ","
 msgstr ","
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "-"
-msgstr "-"
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "/100"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "0"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "14"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "4"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid ":"
-msgstr ":"
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "BORRADOR DE ORDEN DE VENTA"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "C.I./"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "C.I./RUC"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "COTIZACIÓN"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Cant."
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Cliente"
-msgstr "CLIENTE"
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Cliente:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid ""
-"Consulte sus comprobantes electrónicos en: http://comprobantes.nodux.ec"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Código"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
@@ -295,107 +310,171 @@ msgid "DOLARES"
 msgstr ""
 
 msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Descripción"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Descuento:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Dirección:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Fecha:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Firma Autorizada"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "IVA 1"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Nodux - (07) 2 560215 - 0999323367 - hola@nodux.e"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
 msgid "Nodux Cía. Ltda.: (07) 2 560215 – 0999323367 – hola@nodux.ec"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "P. Unit."
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "-"
+msgstr "-"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "0%"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Pago:"
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "Cliente"
+msgstr "CLIENTE"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "Factura"
+msgstr "Factura"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "Fecha"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "IVA"
+msgstr "IVA"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "Impreso:"
+msgstr "Impreso:"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "PERIODO"
+msgstr "PERIODO"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "RAZON SOCIAL:"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "RESUMEN DE VENTAS"
+msgstr ""
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
 msgid "RUC:"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "S"
-msgstr "S"
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "SON:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Sistema"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Subt."
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
 msgid "Subtotal"
 msgstr "Subtotal"
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Subtotal:"
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "Subtotal 12%"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "TOTAL:"
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "TOTAL"
+msgstr "TOTAL"
+
+msgctxt "odt:nodux_sale_payment.sumary_sales:"
+msgid "Total"
+msgstr "Total"
+
+msgctxt "odt:sale.quotation:"
+msgid "%"
+msgstr "%"
+
+msgctxt "odt:sale.quotation:"
+msgid "(sin imp.)"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgctxt "odt:sale.quotation:"
+msgid "4"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid ":"
+msgstr ":"
+
+msgctxt "odt:sale.quotation:"
+msgid "C.I./"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Cantidad"
+msgstr "Cantidad"
+
+msgctxt "odt:sale.quotation:"
+msgid "Cliente"
+msgstr "CLIENTE"
+
+msgctxt "odt:sale.quotation:"
+msgid "Cliente:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Cotización"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "DIR.:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Descripción"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Dirección:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Email/Skype:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Fecha:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Firma Autorizada"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "IVA 1"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "N°:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Precio Total"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Precio Unitario"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "RUC:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "SUBTOTAL"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
+msgid "Telfs.:"
+msgstr ""
+
+msgctxt "odt:sale.quotation:"
 msgid "Teléfono"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "Vencimiento:"
-msgstr ""
+msgctxt "odt:sale.quotation:"
+msgid "VALOR TOTAL"
+msgstr "VALOR TOTAL"
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
+msgctxt "odt:sale.quotation:"
 msgid "Vendedor:"
 msgstr ""
 
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "_______________"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "________________"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "c"
-msgstr "c"
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "total:"
-msgstr ""
-
-msgctxt "odt:nodux_sale_payment.invoice_pos:"
-msgid "ub"
+msgctxt "odt:sale.quotation:"
+msgid "______________"
 msgstr ""
 
 msgctxt "odt:sale.sale:"
@@ -555,12 +634,20 @@ msgid "Deposito"
 msgstr "Depósito"
 
 msgctxt "selection:account.statement,tipo_pago:"
+msgid "Dinero Electronico"
+msgstr ""
+
+msgctxt "selection:account.statement,tipo_pago:"
 msgid "Efectivo"
 msgstr "Efectivo"
 
 msgctxt "selection:account.statement,tipo_pago:"
 msgid "Tarjeta de Credito"
 msgstr "Tarjeta de crédito"
+
+msgctxt "selection:account.statement,tipo_pago:"
+msgid "Transferencia"
+msgstr ""
 
 msgctxt "selection:sale.payment.form,tipo_p:"
 msgid ""
@@ -582,14 +669,26 @@ msgctxt "selection:sale.payment.form,tipo_p:"
 msgid "Tarjeta de Credito"
 msgstr "Tarjeta de crédito"
 
-msgctxt "view:sale.card:"
-msgid "'Codigo para Retencion-Comprobantes Electronicos"
+msgctxt "view:nodux_sale_payment.print_sumary_sales.start:"
+msgid "Generate Summary Purchases"
+msgstr "Generar Resúmen de Ventas"
+
+msgctxt "view:sale.bank:"
+msgid "Formas de Pago Cheques"
 msgstr ""
 
 msgctxt "view:sale.card:"
-msgid "Tarjetas de credito"
+msgid "Tarjetas de Credito"
 msgstr ""
 
 msgctxt "view:sale.sale:"
 msgid "Agregar Credito"
 msgstr "Agregar crédito"
+
+msgctxt "wizard_button:nodux_sale_payment.print_sumary_sales,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:nodux_sale_payment.print_sumary_sales,start,print_:"
+msgid "Generate"
+msgstr "Generar"
