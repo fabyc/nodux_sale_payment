@@ -17,6 +17,7 @@ from trytond.report import Report
 from trytond.modules.company import CompanyReport
 from trytond.transaction import Transaction
 import os
+import pytz
 conversor = None
 try:
     from numword import numword_es
@@ -26,7 +27,8 @@ except:
     print("Please install it...!")
 
 __all__ = ['SaleBank','Card', 'SalePaymentForm',  'WizardSalePayment', 'Sale',
-'InvoiceReportPos', 'ReturnSale', 'QuotationReport']
+'InvoiceReportPos', 'ReturnSale', 'QuotationReport', 'ReportSummarySales',
+'GenerateSummarySales', 'GenerateSummarySalesStart']
 __metaclass__ = PoolMeta
 _ZERO = Decimal('0.0')
 PRODUCT_TYPES = ['goods']
@@ -1020,3 +1022,168 @@ class ReturnSale(Wizard):
 
 class QuotationReport(CompanyReport):
     __name__ = 'sale.quotation'
+
+
+
+
+class GenerateSummarySalesStart(ModelView):
+    'Generate Sales Annexed Start'
+    __name__ = 'nodux_sale_payment.print_sumary_sales.start'
+    company = fields.Many2One('company.company', 'Company', required=True)
+    fiscalyear = fields.Many2One('account.fiscalyear', 'Fiscal Year',
+        required=True)
+    periodo = fields.Many2One('account.period', 'Period',
+        domain=[('fiscalyear', '=', Eval('fiscalyear'))], required = True )
+
+    @staticmethod
+    def default_company():
+        return Transaction().context.get('company')
+
+class GenerateSummarySales(Wizard):
+    'Generate Sales Annexed'
+    __name__ = 'nodux_sale_payment.print_sumary_sales'
+    start = StateView('nodux_sale_payment.print_sumary_sales.start',
+        'nodux_sale_payment.print_sumary_sales_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Generate', 'print_', 'tryton-print', default=True),
+            ])
+    print_ = StateAction('nodux_sale_payment.report_sumary_sales')
+
+    def do_print_(self, action):
+        data = {
+            'company': self.start.company.id,
+            'fiscalyear' : self.start.fiscalyear.id,
+            'periodo' : self.start.periodo.id,
+            }
+        return action, data
+
+    def transition_print_(self):
+        return 'end'
+
+class ReportSummarySales(Report):
+    'Report Sales Annexed'
+    __name__ = 'nodux_sale_payment.sumary_sales'
+
+    @classmethod
+    def parse(cls, report, objects, data, localcontext):
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        company = Company(company_id)
+        Period = Pool().get('account.period')
+        period = Period(data['periodo'])
+        if company.timezone:
+            timezone = pytz.timezone(company.timezone)
+            dt = datetime.now()
+            hora = datetime.astimezone(dt.replace(tzinfo=pytz.utc), timezone)
+        localcontext['company'] = company
+        localcontext['periodo'] = period
+        localcontext['hora'] = hora.strftime('%H:%M:%S')
+        localcontext['fecha'] = hora.strftime('%d/%m/%Y')
+        localcontext['sales'] = cls._get_sales(Period, period)
+        localcontext['total_bi0_fac_ventas'] = cls._total_bi0_fac_ventas(Period, period)
+        localcontext['total_bi12_fac_ventas'] = cls._total_bi12_fac_ventas(Period, period)
+        localcontext['total_iva_fac_ventas'] = cls._total_iva_fac_ventas(Period, period)
+        localcontext['total_fac_ventas'] =  cls._total_fac_ventas(Period, period)
+
+        return super(ReportSummarySales, cls).parse(report, objects, data, localcontext)
+
+    @classmethod
+    def _get_sales(cls, Period, period):
+        pool = Pool()
+        Invoice = pool.get('account.invoice')
+        Sale = pool.get('sale.sale')
+        invoices = Sale.search([('state','in',['confirmed','processing','done']), ('sale_date', '>=', period.start_date), ('sale_date', '<=', period.end_date)])
+        sales = []
+        cont = 0
+
+        if invoices:
+            for invoice in invoices:
+                references = Invoice.search([('description','=', invoice.reference), ('description', '!=', None), ('description', '!=', '')])
+                if references:
+                    for reference in references:
+                        number = reference.number
+
+                bi0_fac_ventas= Decimal(0.00)
+                bi12_fac_ventas= Decimal(0.00)
+                iva_fac_ventas= invoice.tax_amount
+
+                for line in invoice.lines:
+                    if  line.taxes:
+                        for t in line.taxes:
+                            if str('{:.0f}'.format(t.rate*100)) == '0':
+                                bi0_fac_ventas = bi0_fac_ventas + (line.amount)
+                            if str('{:.0f}'.format(t.rate*100)) == '12':
+                                bi12_fac_ventas+= (line.amount)
+
+                lineas = {}
+                lineas['number'] = number
+                lineas['date'] = invoice.sale_date
+                lineas['party'] = invoice.party.name
+                lineas['subtotal12'] = bi12_fac_ventas
+                lineas['subtotal0'] = bi0_fac_ventas
+                lineas['iva'] = iva_fac_ventas
+                lineas['total'] = invoice.total_amount
+
+                sales.append(lineas)
+
+        return sales
+
+    @classmethod
+    def _total_bi0_fac_ventas(cls, Period, period):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        invoices = Sale.search([('state','in',['confirmed','processing','done']), ('sale_date', '>=', period.start_date), ('sale_date', '<=', period.end_date)])
+        total_bi0_fac_ventas= Decimal(0.00)
+
+        if invoices:
+            for invoice in invoices:
+                for line in invoice.lines:
+                    if  line.taxes:
+                        for t in line.taxes:
+                            if str('{:.0f}'.format(t.rate*100)) == '0':
+                                total_bi0_fac_ventas+= line.amount
+
+        return total_bi0_fac_ventas
+
+    @classmethod
+    def _total_bi12_fac_ventas(cls, Period, period):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        invoices = Sale.search([('state','in',['confirmed','processing','done']), ('sale_date', '>=', period.start_date), ('sale_date', '<=', period.end_date)])
+        total_bi12_fac_ventas= Decimal(0.00)
+
+        if invoices:
+            for invoice in invoices:
+                for line in invoice.lines:
+                    if  line.taxes:
+                        for t in line.taxes:
+                            if str('{:.0f}'.format(t.rate*100)) == '12':
+                                total_bi12_fac_ventas+= line.amount
+
+        return total_bi12_fac_ventas
+
+    @classmethod
+    def _total_iva_fac_ventas(cls, Period, period):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        invoices = Sale.search([('state','in',['confirmed','processing','done']), ('sale_date', '>=', period.start_date), ('sale_date', '<=', period.end_date)])
+        total_iva_fac_ventas= Decimal(0.00)
+
+        if invoices:
+            for invoice in invoices:
+                total_iva_fac_ventas += invoice.tax_amount
+
+        return total_iva_fac_ventas
+
+    @classmethod
+    def _total_fac_ventas(cls, Period, period):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        invoices = Sale.search([('state','in',['confirmed','processing','done']), ('sale_date', '>=', period.start_date), ('sale_date', '<=', period.end_date)])
+        total_fac_ventas= Decimal(0.00)
+
+        if invoices:
+            for invoice in invoices:
+                total_fac_ventas += invoice.total_amount
+
+        return total_fac_ventas

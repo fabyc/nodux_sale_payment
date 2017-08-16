@@ -22,7 +22,7 @@ copyright notices and license terms. -->
             <field name="name">Invoice</field>
             <field name="model">sale.sale</field>
             <field name="report_name">nodux_sale_payment.invoice_pos</field>
-            <field name="report">nodux_sale_payment/invoice.odt</field>
+            <field name="report">nodux_sale_payment/invoice_educaes.odt</field>
         </record>
 
         <record model="ir.action.keyword" id="report_invoice_pos_keyword">
@@ -116,7 +116,29 @@ copyright notices and license terms. -->
             <field name="view" ref="sale_bank_view_form"/>
             <field name="act_window" ref="act_sale_bank_form"/>
         </record>
+
         <menuitem parent="account.menu_account_configuration" action="act_sale_bank_form"
             id="menu_sale_bank_form"/>
+        <!--RESUMEN VENTAS -->
+
+        <record model="ir.ui.view" id="print_sumary_sales_start_view_form">
+          <field name="model">nodux_sale_payment.print_sumary_sales.start</field>
+          <field name="type">form</field>
+          <field name="name">sumary_sales_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="wizard_sumary_sales">
+          <field name="name">Generar Resumen de Ventas</field>
+          <field name="wiz_name">nodux_sale_payment.print_sumary_sales</field>
+        </record>
+        <menuitem parent="sale.menu_sale" action="wizard_sumary_sales"
+            id="menu_sumary_sales" icon="tryton-print"/>
+
+        <record model="ir.action.report" id="report_sumary_sales">
+          <field name="name">Resumen de Ventas</field>
+          <field name="model"></field>
+          <field name="report_name">nodux_sale_payment.sumary_sales</field>
+          <field name="report">nodux_sale_payment/sumary_sales.odt</field>
+        </record>
+
     </data>
 </tryton>

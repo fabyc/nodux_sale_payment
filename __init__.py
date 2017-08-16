@@ -18,14 +18,17 @@ def register():
         InvoiceLine,
         Move,
         Line,
+        GenerateSummarySalesStart,
         module='nodux_sale_payment', type_='model')
     Pool.register(
         WizardSalePayment,
         ReturnSale,
         OpenStatement,
         CloseStatement,
+        GenerateSummarySales,
         module='nodux_sale_payment', type_='wizard')
     Pool.register(
         InvoiceReportPos,
         QuotationReport,
+        ReportSummarySales,
         module='nodux_sale_payment', type_='report')
