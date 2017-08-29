@@ -35,7 +35,7 @@ copyright notices and license terms. -->
             <field name="name">Cotizacion</field>
             <field name="model">sale.sale</field>
             <field name="report_name">sale.quotation</field>
-            <field name="report">nodux_sale_payment/sale.odt</field>
+            <field name="report">nodux_sale_payment/quotation.odt</field>
         </record>
         <record model="ir.action.keyword" id="report_sale_keyword">
             <field name="keyword">form_print</field>

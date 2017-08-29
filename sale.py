@@ -853,6 +853,7 @@ class InvoiceReportPos(Report):
         if (sale.state == 'quotation') | (sale.state == 'draft'):
             pass
         else:
+            print "La factura ", Invoice, invoice
             localcontext['maturity_date'] = cls._get_maturity_date(Invoice, invoice)
         localcontext['facturacion_electronica'] = cls._get_facelect(Invoice, invoice)
         #localcontext['fecha_de_emision']=cls._get_fecha_de_emision(Invoice, invoice)
@@ -1023,7 +1024,40 @@ class ReturnSale(Wizard):
 class QuotationReport(CompanyReport):
     __name__ = 'sale.quotation'
 
+    @classmethod
+    def parse(cls, report, records, data, localcontext):
+        pool = Pool()
+        Sale = pool.get('sale.sale')
+        sale = records[0]
 
+        localcontext['subtotal12'] = cls._get_subtotal_12(Sale, sale)
+        localcontext['subtotal0'] = cls._get_subtotal_0(Sale, sale)
+
+        return super(QuotationReport, cls).parse(report, records, data, localcontext)
+
+    @classmethod
+    def _get_subtotal_12(cls, Sale, sale):
+        subtotal12 = Decimal(0.00)
+        pool = Pool()
+
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '12':
+                        subtotal12= subtotal12 + (line.amount)
+        return subtotal12
+
+    @classmethod
+    def _get_subtotal_0(cls, Sale, sale):
+        subtotal0 = Decimal(0.00)
+        pool = Pool()
+
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '0':
+                        subtotal0= subtotal0 + (line.amount)
+        return subtotal0
 
 
 class GenerateSummarySalesStart(ModelView):
@@ -1087,6 +1121,29 @@ class ReportSummarySales(Report):
 
         return super(ReportSummarySales, cls).parse(report, objects, data, localcontext)
 
+    @classmethod
+    def _get_subtotal_12(cls, Sale, sale):
+        subtotal12 = Decimal(0.00)
+        pool = Pool()
+
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '12':
+                        subtotal12= subtotal12 + (line.amount)
+        return subtotal12
+
+    @classmethod
+    def _get_subtotal_0(cls, Sale, sale):
+        subtotal0 = Decimal(0.00)
+        pool = Pool()
+
+        for line in sale.lines:
+            if  line.taxes:
+                for t in line.taxes:
+                    if str('{:.0f}'.format(t.rate*100)) == '0':
+                        subtotal0= subtotal0 + (line.amount)
+        return subtotal0
     @classmethod
     def _get_sales(cls, Period, period):
         pool = Pool()
