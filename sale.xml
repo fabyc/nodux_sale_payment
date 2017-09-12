@@ -22,7 +22,7 @@ copyright notices and license terms. -->
             <field name="name">Invoice</field>
             <field name="model">sale.sale</field>
             <field name="report_name">nodux_sale_payment.invoice_pos</field>
-            <field name="report">nodux_sale_payment/invoice_educaes.odt</field>
+            <field name="report">nodux_sale_payment/invoice_agroveterinaria.odt</field>
         </record>
 
         <record model="ir.action.keyword" id="report_invoice_pos_keyword">
